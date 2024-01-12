@@ -25,7 +25,7 @@ async def asyncify(xs: Iterable[A]) -> AsyncIterable[A]:
     for x in xs:
         yield x
         
-async def synch(xs: AsyncIterable[A]) -> list[A]:
+async def syncify(xs: AsyncIterable[A]) -> list[A]:
     ys = []
     async for x in xs:
         ys += [x]

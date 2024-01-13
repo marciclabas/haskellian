@@ -13,7 +13,7 @@ async def either(x: Awaitable[A]) -> A | Exception:
     
 async def uneither(x: Awaitable[A] | Exception) -> Awaitable[A]:
     match (await x):
-        case Exception(e):
+        case Exception() as e:
             raise e
         case v:
             return v

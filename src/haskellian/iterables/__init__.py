@@ -1,4 +1,4 @@
-from .basics import map, filter
+from .basics import map, filter, iterable, min, max, sorted, flatten, flatmap, starmap
 from .slicing import fst, snd, head, tail, take, skip
 from .zipping import unzip, unzipg, uncons, pairwise
 from .nested import ndenumerate, ndflat, transpose

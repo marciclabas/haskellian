@@ -26,10 +26,19 @@ async def safe(x: Awaitable[A]) -> A | None:
     
     
 async def wrap(x: A) -> Awaitable[A]:
+    """aka `return` for the `Future` monad"""
     return x
+
+async def wait(x: A | Awaitable[A]) -> Awaitable[A]:
+    try:
+        return await x
+    except TypeError:
+        return x
     
 async def then(f: Callable[[A], B], x: Awaitable[A]) -> Awaitable[B]:
+    """aka `fmap` aka `<$>` for the `Future` monad"""
     return f(await x)
 
 async def bind(f: Callable[[A], Awaitable[B]], x: Awaitable[A]) -> Awaitable[B]:
+    """aka `flatmap` aka `chain` aka `>>=` for the `Future` monad"""
     return await f(await x)

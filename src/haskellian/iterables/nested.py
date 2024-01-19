@@ -1,8 +1,16 @@
-from typing import Iterable, TypeVar
+from typing import Iterable, TypeVar, Callable
 import ramda as R
 from .basics import iterable
 
 A = TypeVar('A')
+B = TypeVar('B')
+
+@R.curry
+def nested_map(f: Callable[[A], B], xs: Iterable[Iterable[A]], depth: int = 2) -> list[list[B]]:
+    if depth == 0:
+        return f(xs)  # Apply the function at the target depth
+    else:
+        return [nested_map(f, x, depth - 1) for x in xs]
 
 def ndrange(*ranges: int | tuple[int, int] | tuple[int, int, int]) -> Iterable[tuple[int, ...]]:
     """`ndrange(3, 3) = [(0, 0), (0, 1), (0, 2), ..., (2, 0), (2, 1), (2, 2)]`

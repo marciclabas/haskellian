@@ -4,6 +4,22 @@ from .basics import iterable
 
 A = TypeVar('A')
 
+def ndrange(*ranges: int | tuple[int, int] | tuple[int, int, int]) -> Iterable[tuple[int, ...]]:
+    """`ndrange(3, 3) = [(0, 0), (0, 1), (0, 2), ..., (2, 0), (2, 1), (2, 2)]`
+    
+    Ranges can also be `(start, stop)` or `(start, stop, step)`, e.g:
+    >>> ndrange(3, (2, 4)) = [(0, 2), (0, 3), (1, 2), (1, 3), (2, 2), (2, 3)]
+    """
+    def _ndrange(*ranges, inds = ()):
+        if len(ranges) == 0:
+            yield inds
+        else:
+            [r, *rs] = ranges
+            rng = range(*r) if iterable(r) else range(r)
+            for i in rng:
+                yield from _ndrange(*rs, inds=inds+(i,))
+    yield from _ndrange(*ranges)
+
 def _fixed_ndenumerate(xxs: Iterable[Iterable[A]], depth: int, inds: tuple[int, ...] = ()) -> Iterable[tuple[A, tuple[int, ...]]]:
     if depth == 0:
         yield inds, xxs

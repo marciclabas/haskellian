@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 from typing import Callable, Awaitable, TypeVar
 import ramda as R
 
@@ -30,10 +31,7 @@ async def wrap(x: A) -> Awaitable[A]:
     return x
 
 async def wait(x: A | Awaitable[A]) -> Awaitable[A]:
-    try:
-        return await x
-    except TypeError:
-        return x
+    return (await x) if inspect.isawaitable(x) else x
     
 async def then(f: Callable[[A], B], x: Awaitable[A]) -> Awaitable[B]:
     """aka `fmap` aka `<$>` for the `Future` monad"""

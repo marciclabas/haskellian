@@ -43,3 +43,14 @@ def flatmap(f: Callable[[A], Iterable[B]], xs: Iterable[A]) -> Iterable[B]:
 @R.curry
 def starmap(f: Callable[[A, B, Etc], C], xs: Iterable[tuple[A, B, Etc]]) -> Iterable[C]:
     return itertools.starmap(f, xs)
+
+def range(end: int | None = None) -> Iterable[int]:
+    """Possibly infinite range"""
+    if end is None:
+        i = 0
+        while True:
+            yield i
+            i += 1
+    else:
+        for i in builtins.range(end):
+            yield i

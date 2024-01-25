@@ -30,3 +30,25 @@ async def syncify(xs: AsyncIterable[A]) -> list[A]:
     async for x in xs:
         ys += [x]
     return ys
+
+@R.curry
+async def skip(n: int, xs: AsyncIterable[A]) -> AsyncIterable[A]:
+    async for i, x in enumerate(xs):
+        if i >= n:
+            yield x
+        
+@R.curry
+async def take(n: int, xs: AsyncIterable[A]) -> AsyncIterable[A]:
+    if n == 0:
+        return
+    async for i, x in enumerate(xs):
+        if i < n - 1:
+            yield x
+        elif i >= n - 1:
+            yield x
+            return
+   
+@R.curry             
+async def split(n: int, xs: AsyncIterable[A]) -> tuple[list[A], AsyncIterable[A]]:
+    head = await syncify(take(n, xs))
+    return head, xs

@@ -5,4 +5,3 @@
 from .main import vpipe, either, uneither, safe, listify
 from .thunk import Thunk
 from .iterables import *
-from . import asynch

@@ -7,16 +7,33 @@ B = TypeVar('B')
 
 @R.curry
 def nested_map(f: Callable[[A], B], xs: Iterable[Iterable[A]], depth: int = 2) -> list[list[B]]:
+    """`map` applied at a fixed depth. `nested_map(depth=1)` is equivalent to `map`, except it returns a `list`"""
     if depth == 0:
         return f(xs)  # Apply the function at the target depth
     else:
         return [nested_map(f, x, depth - 1) for x in xs]
 
 def ndrange(*ranges: int | tuple[int, int] | tuple[int, int, int]) -> Iterable[tuple[int, ...]]:
-    """`ndrange(3, 3) = [(0, 0), (0, 1), (0, 2), ..., (2, 0), (2, 1), (2, 2)]`
+    """Like `range`, but returns an iterable of `n`-tuples instead of ints.
     
-    Ranges can also be `(start, stop)` or `(start, stop, step)`, e.g:
-    >>> ndrange(3, (2, 4)) = [(0, 2), (0, 3), (1, 2), (1, 3), (2, 2), (2, 3)]
+    So, instead of
+    ```
+    for i in range(m):
+        for j in range(n):
+            ...
+    ```
+    You can just do:
+    ```
+    for i, j in ndrange(m, n):
+        ...
+    ```
+    
+    And it also supports normal `(start, end)` or `(start, end, step)` ranges:
+    ```
+    for i, j in ndrange((-10, 0, 2), (4, 6)):
+        ...
+    # (-10, 4), (-10, 5), (-8, 4), (-8, 5), ...
+    ```
     """
     def _ndrange(*ranges, inds = ()):
         if len(ranges) == 0:
@@ -44,7 +61,28 @@ def _auto_ndenumerate(xxs: Iterable[Iterable[A]], inds: tuple[int, ...] = ()) ->
 
 @R.curry         
 def ndenumerate(xxs: Iterable[Iterable[A]], depth: int | None = None) -> Iterable[tuple[tuple[int, ...], A]]:
-    """`ndenumerate([[x1, x2], [x3]]) = [(x1, (0, 0)), (x2, (0, 1), (x3, (1, 0)))]`"""
+    """Like `enumerate`, but for nested iterables.
+    
+    So, instead of
+    
+    ```
+    for i, xxs in enumerate(xxxs):
+        for j, xs in enumerate(xxs):
+            for k, x in enumerate(xs):
+                ...
+    ```
+    
+    You can just do
+    
+    ```
+    for x, (i, j, k) in ndenumerate(xxxs):
+        ...
+    ```
+    
+    Note:
+    - By default it unrolls all the way down until a none-iterable object is found.
+    - If you want to iterate over iterables (e.g. lists, numpy arrays, tensors), you'll have to pass in a fixed `depth`
+    """
     return _auto_ndenumerate(xxs) if depth is None else _fixed_ndenumerate(xxs, depth)
 
 def _fixed_ndflat(xxs: Iterable[Iterable[A]], depth: int) -> Iterable[A]:

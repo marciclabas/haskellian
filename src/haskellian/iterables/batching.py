@@ -15,8 +15,9 @@ def split(n: int, xs: Iterable[A]) -> tuple[list[A], Iterable[A]]:
 
 
 @R.curry
-def batch(n: int, iterable: Iterable[A]) -> Iterable[tuple[A]]:
-    it = iter(iterable)
+def batch(n: int, xs: Iterable[A]) -> Iterable[tuple[A]]:
+    """Batches `xs` into `n`-tuples"""
+    it = iter(xs)
     while b := tuple(itertools.islice(it, n)):
         yield b
 

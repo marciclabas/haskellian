@@ -2,7 +2,7 @@ from typing import AsyncIterable, Awaitable, TypeVar, Generic
 
 A = TypeVar("A")
 
-class AsyncMemo(Generic[A]):
+class AsyncMemoIter(Generic[A]):
     def __init__(self, xs: AsyncIterable[A]):
         self.xs = xs
         self.stored = []

@@ -25,3 +25,5 @@ build:
 # Publish `dist/*` to pypi
 publish:
   {{PYTHON}} -m twine upload {{PKG}}/dist/*
+
+republish: build publish

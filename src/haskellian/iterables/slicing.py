@@ -15,9 +15,10 @@ def snd(t: tuple[A, ...]) -> A:
 	return x
 
 def head(xs: Iterable[A]) -> A | None:
-	"""`head([x, *_]) = x`"""
-	return next(xs, None)
-    
+  """`head([x, *_]) = x`"""
+  for x in xs:
+    return x
+  
 def tail(xs: Iterable[A]) -> Iterable[A]:
 	"""`tail([_, *xs]) = xs`"""
 	return skip(1, xs)

@@ -24,8 +24,7 @@ async def safe(x: Awaitable[A]) -> A | None:
         return await x
     except:
         return None
-    
-    
+
 async def wrap(x: A) -> Awaitable[A]:
     """aka `return` for the `Future` monad"""
     return x

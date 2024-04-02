@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "haskellian-async"
+version = "0.1.0"
+authors = [
+  {name="Marcel Claramunt", email="marcel@moveread.com"}
+]
+description = "FP-style tools for async code"
+dependencies = [
+  
+]
+requires-python = ">=3.10"
+readme = {file="README.md", content-type="text/markdown"}
+
+# [project.urls]
+# repo = "<GIT_REPO_URL>"
+
+# [project.optional-dependencies]
+# test = [
+#   "pytest < 5.0.0",
+#   "pytest-cov[all]"
+# ]

@@ -4,14 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "haskellian-either"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
   {name="Marcel Claramunt", email="marcel@moveread.com"}
 ]
 description = "Simple Either type"
-dependencies = [
-  "ramda"
-]
+dependencies = []
 requires-python = ">=3.10"
 readme = {file="README.md", content-type="text/markdown"}
 

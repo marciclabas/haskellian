@@ -1,15 +1,16 @@
-from typing import TypeVar, Callable, Iterable
+from typing import TypeVar, Callable, Iterable, TypeVarTuple
 from functools import reduce, wraps
 
 A = TypeVar('A')
 B = TypeVar('B')
+As = TypeVarTuple('As')
 
 
 def pipe(x: A, *funcs: Callable[[A], B]) -> B:
   """Apply to `x` a left-to-right composition of `funcs`
   >>> pipe('  hello ', str.strip, str.title) # 'Hello'
   """
-  return reduce(lambda x, f: f(x), funcs, x)
+  return reduce(lambda x, f: f(x), funcs, x) # type: ignore
 
 def flow(*funcs: Callable[[A], B]) -> Callable[[A], B]:
   """Left-to-right composition of `funcs`
@@ -25,7 +26,7 @@ def safe(f: Callable[[], A]) -> A | None:
   except:
     ...
 
-def listify(func: Callable[[A], Iterable[B]]) -> Callable[[A], list[B]]:
+def listify(func: Callable[[*As], Iterable[B]]) -> Callable[[*As], list[B]]:
     """Make a generator return a list
     
     ```
@@ -39,5 +40,5 @@ def listify(func: Callable[[A], Iterable[B]]) -> Callable[[A], list[B]]:
     """
     @wraps(func)
     def _f(*args, **kwargs):
-        return list(func(*args, **kwargs))
+        return list(func(*args, **kwargs)) # type: ignore
     return _f

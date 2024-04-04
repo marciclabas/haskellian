@@ -5,4 +5,4 @@
 - Details
 """
 from .type import Either, Left, Right
-from .funcs import safe, unsafe, bind, fmap, match
+from .funcs import safe, sequence, maybe, secure, secure_coro, secured_exceptions

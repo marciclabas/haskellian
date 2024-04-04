@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "haskellian-async"
+name = "haskellian-asyn"
 version = "0.1.0"
 authors = [
   {name="Marcel Claramunt", email="marcel@moveread.com"}

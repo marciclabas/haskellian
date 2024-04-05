@@ -4,5 +4,9 @@
 
 - Details
 """
-from .type import Either, Left, Right
-from .funcs import safe, sequence, maybe, secure, secure_coro, secured_exceptions
+from .type import Either, Left, Right, IsLeft
+from .funcs import safe, sequence, maybe, filter, filter_lefts
+try:
+  from .extras import *
+except ImportError:
+  ...

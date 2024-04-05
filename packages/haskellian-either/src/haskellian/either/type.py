@@ -8,6 +8,10 @@ R = TypeVar('R', covariant=True)
 L2 = TypeVar('L2')
 R2 = TypeVar('R2')
 
+@dataclass(eq=False)
+class IsLeft(BaseException, Generic[L]):
+  value: L
+
 @dataclass
 class Either(ABC, Generic[L, R]):
   value: L | R
@@ -36,43 +40,36 @@ class Either(ABC, Generic[L, R]):
   
   def mapl(self, f: Callable[[L], L2]) -> 'Either[L2, R]':
     """Map the left branch"""
-    return self.match(lambda x: Left(f(x)), Right)
+    return self.match(lambda x: Left(f(x)), lambda x: Right(x))
   
   def fmap(self, f: Callable[[R], R2]) -> 'Either[L, R2]':
-    return self.match(Left, lambda x: Right(f(x)))
+    return self.match(lambda x: Left(x), lambda x: Right(f(x)))
   
   __or__ = fmap
   """Alias of `fmap`"""
       
   def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L|L2, R2]':
-    return self.match(Left, f)
+    return self.match(lambda x: Left(x), f)
   
   __and__ = bind
   """Alias of `bind`"""
 
   def unsafe(self) -> R:
-    """Unwraps the value or throws the left exception"""
+    """Unwraps the value or throws an `IsLeft` exception
+    
+    (`IsLeft.value` will contain the wrapped value)"""
     match self:
       case Left(err):
-        exc = err if isinstance(err, BaseException) else Exception(err)
-        raise exc
-      case Right(value):
-        return value
-  
-  def expect(self, exc: Callable[[], BaseException]) -> R:
-    """Unwraps the value or throws the exception"""
-    match self:
-      case Left():
-        raise exc()
+        raise IsLeft(err)
       case Right(value):
         return value
 
 @dataclass
-class Left(Either[L, R], Generic[L, R]):
+class Left(Either[L, R]):
   value: L = None
   tag: Literal['left'] = 'left'
 
 @dataclass
-class Right(Either[L, R], Generic[L, R]):
+class Right(Either[L, R]):
   value: R = None
   tag: Literal['right'] = 'right'

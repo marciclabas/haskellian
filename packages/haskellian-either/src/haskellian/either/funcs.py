@@ -33,3 +33,11 @@ def filter_lefts(eithers: Iterable[Either[L, R]]) -> Iterable[L]:
     match e:
       case Left(err):
         yield err
+
+def take_while(eithers: Iterable[Either[L, R]]) -> Iterable[R]:
+  for e in eithers:
+    match e:
+      case Right(x):
+        yield x
+      case _:
+        return

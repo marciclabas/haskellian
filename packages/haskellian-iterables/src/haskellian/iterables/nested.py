@@ -104,6 +104,6 @@ def ndflat(xxs: Iterable[Iterable[A]], depth: int | None = None) -> Iterable[Ite
     """`ndflat([[x1, x2], [x3, [x4]]]) = [x1, x2, x3, x4]`"""
     return _auto_ndflat(xxs) if depth is None else _fixed_ndflat(xxs, depth)
 
-def transpose(xs: Iterable[Iterable[A]]) -> Iterable[Iterable[A]]:
+def transpose(xs: Iterable[Iterable[A]]) -> Iterable[list[A]]:
     """`transpose([[1, 2], [3, 4], [5, 6]]) = [[1, 2, 3], [4, 5, 6]]`"""
     return zip(*xs)

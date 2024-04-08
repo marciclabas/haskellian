@@ -46,8 +46,8 @@ class EitherBase(ABC, Generic[L, R]):
     return self.match(lambda _: on_left(), lambda _: on_right())
   
 @dataclass
-class Left(EitherBase[L, Any], Generic[L]):
-  value: L
+class Left(EitherBase[L, R], Generic[L, R]):
+  value: L = None
   tag: Literal['left'] = 'left'
 
   def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
@@ -57,8 +57,8 @@ class Left(EitherBase[L, Any], Generic[L]):
     raise IsLeft(self.value)
 
 @dataclass
-class Right(EitherBase[Any, R], Generic[R]):
-  value: R
+class Right(EitherBase[L, R], Generic[L, R]):
+  value: R = None
   tag: Literal['right'] = 'right'
 
   def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
@@ -67,4 +67,4 @@ class Right(EitherBase[Any, R], Generic[R]):
   def unsafe(self) -> R:
     return self.value
 
-Either = Left[L] | Right[R]
+Either = Left[L, R] | Right[L, R]

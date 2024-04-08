@@ -1,4 +1,4 @@
-from typing import AsyncIterator, TypeVar, AsyncIterable
+from typing import TypeVar, AsyncIterable
 import asyncio
 import ramda as R
 

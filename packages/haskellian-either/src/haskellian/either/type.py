@@ -1,5 +1,5 @@
-from typing import Generic, TypeVar, Literal, Callable
-from abc import ABC
+from typing import Generic, TypeVar, Literal, Callable, Any, TypeGuard
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 A = TypeVar('A')
@@ -12,64 +12,59 @@ R2 = TypeVar('R2')
 class IsLeft(BaseException, Generic[L]):
   value: L
 
-@dataclass
-class Either(ABC, Generic[L, R]):
-  value: L | R
-  tag: Literal['left', 'right']
+class EitherBase(ABC, Generic[L, R]):
 
+  @abstractmethod
   def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
     """Unwrap an `Either` by matching both branches"""
-    match self:
-      case Left(err):
-        return on_left(err)
-      case Right(value):
-        return on_right(value)
-      
-  def match_(self, on_left: Callable[[], A], on_right: Callable[[], A]) -> A:
-    """Like `match`, but handlers don't get the wrapped value"""
-    return self.match(lambda _: on_left(), lambda _: on_right())
-  
-  def tap(self, on_left: Callable[[L], None] = lambda _: None, on_right: Callable[[R], None] = lambda _: None) -> 'Either[L, R]':
-    """Execute `on_left`/`on_right` but return the either as is"""
-    match self:
-      case Left(err):
-        on_left(err)
-      case Right(value):
-        on_right(value)
-    return self
-  
-  def mapl(self, f: Callable[[L], L2]) -> 'Either[L2, R]':
-    """Map the left branch"""
-    return self.match(lambda x: Left(f(x)), lambda x: Right(x))
-  
-  def fmap(self, f: Callable[[R], R2]) -> 'Either[L, R2]':
-    return self.match(lambda x: Left(x), lambda x: Right(f(x)))
-  
-  __or__ = fmap
-  """Alias of `fmap`"""
-      
-  def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L|L2, R2]':
-    return self.match(lambda x: Left(x), f)
-  
-  __and__ = bind
-  """Alias of `bind`"""
 
+  @abstractmethod
   def unsafe(self) -> R:
     """Unwraps the value or throws an `IsLeft` exception
     
     (`IsLeft.value` will contain the wrapped value)"""
-    match self:
-      case Left(err):
-        raise IsLeft(err)
-      case Right(value):
-        return value
+    
 
+  def bind(self, f: 'Callable[[R], Either[L, R2]]') -> 'Either[L, R2]':
+    return self.match(lambda x: Left(x), f)
+
+  def fmap(self, f: Callable[[R], R2]) -> 'Either[L, R2]':
+    return self.match(lambda x: Left(x), lambda x: Right(f(x)))
+
+  def mapl(self, f: Callable[[L], L2]) -> 'Either[L2, R]':
+    """Map the left branch"""
+    return self.match(lambda x: Left(f(x)), lambda x: Right(x))
+
+  __or__ = fmap
+  """Alias of `fmap`"""
+  
+  __and__ = bind
+  """Alias of `bind`"""
+  
+  def match_(self, on_left: Callable[[], A], on_right: Callable[[], A]) -> A:
+    """Like `match`, but handlers don't get the wrapped value"""
+    return self.match(lambda _: on_left(), lambda _: on_right())
+  
 @dataclass
-class Left(Either[L, R]):
-  value: L = None
+class Left(EitherBase[L, Any], Generic[L]):
+  value: L
   tag: Literal['left'] = 'left'
 
+  def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
+    return on_left(self.value)
+  
+  def unsafe(self):
+    raise IsLeft(self.value)
+
 @dataclass
-class Right(Either[L, R]):
-  value: R = None
+class Right(EitherBase[Any, R], Generic[R]):
+  value: R
   tag: Literal['right'] = 'right'
+
+  def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
+    return on_right(self.value)
+  
+  def unsafe(self) -> R:
+    return self.value
+
+Either = Left[L] | Right[R]

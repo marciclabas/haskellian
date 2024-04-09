@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "haskellian-asyn"
-version = "0.2.1"
+version = "0.2.2"
 authors = [
   {name="Marcel Claramunt", email="marcel@moveread.com"}
 ]
 description = "FP-style tools for async code"
 dependencies = [
-  
+  "ramda"
 ]
 requires-python = ">=3.10"
 readme = {file="README.md", content-type="text/markdown"}

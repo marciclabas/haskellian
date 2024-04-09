@@ -2,7 +2,7 @@ from typing import Generic, TypeVar, Literal, Callable, Any, TypeGuard
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-A = TypeVar('A')
+A = TypeVar('A', covariant=True)
 L = TypeVar('L', covariant=True)
 R = TypeVar('R', covariant=True)
 L2 = TypeVar('L2')
@@ -15,8 +15,12 @@ class IsLeft(BaseException, Generic[L]):
 class EitherBase(ABC, Generic[L, R]):
 
   @abstractmethod
+  def _match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> int:
+    """Unwrap an `Either` by matching both branches"""
+  
   def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
     """Unwrap an `Either` by matching both branches"""
+    return self._match(on_left, on_right)
 
   @abstractmethod
   def unsafe(self) -> R:
@@ -50,7 +54,7 @@ class Left(EitherBase[L, R], Generic[L, R]):
   value: L = None
   tag: Literal['left'] = 'left'
 
-  def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
+  def _match(self, on_left, on_right):
     return on_left(self.value)
   
   def unsafe(self):
@@ -61,7 +65,7 @@ class Right(EitherBase[L, R], Generic[L, R]):
   value: R = None
   tag: Literal['right'] = 'right'
 
-  def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
+  def _match(self, on_left, on_right):
     return on_right(self.value)
   
   def unsafe(self) -> R:

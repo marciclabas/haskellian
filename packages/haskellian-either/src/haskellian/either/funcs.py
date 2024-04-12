@@ -13,6 +13,9 @@ def safe(func: Callable[[], R], Exc: type[Err] = Exception) -> 'Either[Err, R]':
     
 def maybe(x: R | None) -> 'Either[None, R]':
   return Left(None) if x is None else Right(x)
+
+def unsafe(x: Either[L, R]) -> R:
+  return x.unsafe()
     
 def sequence(eithers: Iterable[Either[L, R]]) -> Either[list[L], list[R]]:
   """List of lefts if any (thus with length in `[1, len(eithers)]`), otherwise list of all rights (with length `len(eithers)`)"""

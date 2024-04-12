@@ -1,8 +1,13 @@
 from typing import TypeVar, Generic, Callable, Awaitable
-from .ops import then, bind
 
 T = TypeVar('T')
 U = TypeVar('U')
+
+async def then(f: Callable[[T], U], x: Awaitable[T]) -> U:
+  return f(await x)
+
+async def bind(f: Callable[[T], Awaitable[U]], x: Awaitable[T]) -> U:
+  return await f(await x)
 
 class Promise(Generic[T], Awaitable[T]):
   def __init__(self, x: Awaitable[T]):
@@ -20,3 +25,6 @@ class Promise(Generic[T], Awaitable[T]):
     return Promise(bind(f, self))
   
   __and__ = bind
+
+  async def run(self) -> T:
+    return await self

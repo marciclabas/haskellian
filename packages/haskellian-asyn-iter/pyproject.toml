@@ -3,20 +3,20 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "haskellian-asyn"
-version = "0.3.1"
+name = "haskellian-asyn-iter"
+version = "0.1.2"
 authors = [
   {name="Marcel Claramunt", email="marcel@moveread.com"}
 ]
-description = "FP-style tools for async code"
+description = "FP-style tools for async iterables"
 dependencies = [
-  "ramda", "haskellian-iterables"
+  "haskellian-asyn"
 ]
 requires-python = ">=3.10"
 readme = {file="README.md", content-type="text/markdown"}
 
-# [project.urls]
-# repo = "<GIT_REPO_URL>"
+[project.urls]
+repo = "https://github.com/moveread/REPO.git"
 
 # [project.optional-dependencies]
 # test = [

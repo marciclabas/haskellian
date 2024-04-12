@@ -1,5 +1,6 @@
 from typing import TypeVar, Generic, AsyncIterator
-from ..awaitables import ManagedAwaitable
+from haskellian.asyn.promises import ManagedAwaitable
+
 T = TypeVar('T')
 U = TypeVar('U')
 

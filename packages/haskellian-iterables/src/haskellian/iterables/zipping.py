@@ -1,15 +1,16 @@
 from typing import Iterable, TypeVar
 
 A = TypeVar('A')
+B = TypeVar('B')
 
 def unzipg(xs: Iterable[tuple[A, ...]]) -> tuple[Iterable[A], ...]:
     """`[(a, b, ...)] -> ([a], [b], ...)`
     - Like `unzip` but returns a tuple of generators"""
     return tuple(zip(*xs))
 
-def unzip(xs: Iterable[tuple[A, ...]]) -> tuple[Iterable[A], ...]:
+def unzip(xs: Iterable[tuple[A, B]]) -> tuple[list[A], list[B]]:
     """`[(a, b, ...)] -> ([a], [b], ...)`"""
-    return tuple(map(list, zip(*xs)))
+    return tuple(map(list, zip(*xs))) # type: ignore
 
 def uncons(xs: Iterable[A]) -> tuple[A | None, Iterable[A]]:
     """`uncons([x, *xs]) = (x, xs)`"""

@@ -1,4 +1,4 @@
-from typing import TypeVar, Callable, Awaitable, Mapping, Iterable, overload
+from typing import TypeVar, Awaitable, Mapping, Iterable, overload
 from inspect import isawaitable
 from haskellian.iterables import unzip
 import asyncio
@@ -12,8 +12,12 @@ async def of(x: T) -> T:
   return x
 
 @lift
+async def delay(secs: float):
+  await asyncio.sleep(secs)
+
+@lift
 async def wait(x: T | Awaitable[T]) -> T:
-  return await x if isawaitable(x) else x
+  return await x if isawaitable(x) else x # type: ignore
 
 @overload
 async def all(xs: Iterable[Awaitable[T]]) -> list[T]: ...

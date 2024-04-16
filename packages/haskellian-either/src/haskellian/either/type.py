@@ -29,7 +29,7 @@ class EitherBase(ABC, Generic[L, R]):
     (`IsLeft.value` will contain the wrapped value)"""
     
 
-  def bind(self, f: 'Callable[[R], Either[L, R2]]') -> 'Either[L, R2]':
+  def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L2, R2]':
     return self.match(lambda x: Left(x), f)
 
   def fmap(self, f: Callable[[R], R2]) -> 'Either[L, R2]':

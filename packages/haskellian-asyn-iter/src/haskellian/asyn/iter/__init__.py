@@ -4,5 +4,6 @@
 
 - Details
 """
+from .ops import *
 from .iter import AsyncIter, lift
 from .managed import ManagedIterable

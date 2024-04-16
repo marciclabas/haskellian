@@ -17,6 +17,7 @@ class Promise(Generic[T], Awaitable[T]):
     return self.x.__await__()
   
   def then(self, f: Callable[[T], U]) -> 'Promise[U]':
+    """Your usual functor map"""
     return Promise(then(f, self))
 
   __or__ = then

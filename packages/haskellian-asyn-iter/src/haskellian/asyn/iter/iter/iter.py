@@ -1,5 +1,5 @@
 from typing import Callable, Generic, TypeVar, Awaitable, AsyncIterator, AsyncIterable, TypeGuard, overload, TypeVarTuple
-from .. import ops
+from ..ops import prefetched, map, amap, flatmap, filter, syncify, skip, batch, enumerate, split
 
 A = TypeVar('A')
 B = TypeVar('B')
@@ -16,15 +16,15 @@ class AsyncIter(Generic[A], AsyncIterator[A]):
     raise StopAsyncIteration()
   
   def map(self, f: Callable[[A], B]) -> 'AsyncIter[B]':
-    return AsyncIter(ops.map(f, self))
+    return AsyncIter(map(f, self))
   
   __or__ = map
   
   def amap(self, f: Callable[[A], Awaitable[B]]) -> 'AsyncIter[B]':
-    return AsyncIter(ops.amap(f, self))
+    return AsyncIter(amap(f, self))
   
   def flatmap(self, f: Callable[[A], AsyncIterable[B]]) -> 'AsyncIter[B]':
-    return AsyncIter(ops.flatmap(f, self))
+    return AsyncIter(flatmap(f, self))
   
   __and__ = flatmap
 
@@ -33,27 +33,27 @@ class AsyncIter(Generic[A], AsyncIterator[A]):
   @overload
   def filter(self, p: Callable[[A], bool]) -> 'AsyncIter[A]': ...
   def filter(self, p: Callable[[A], bool]) -> 'AsyncIter[A]':
-    return AsyncIter(ops.filter(p, self))
+    return AsyncIter(filter(p, self))
 
   async def sync(self) -> list[A]:
-    return await ops.syncify(self)
+    return await syncify(self)
   
   def skip(self, n: int) -> 'AsyncIter[A]':
-    return AsyncIter(ops.skip(n, self))
+    return AsyncIter(skip(n, self))
   
   async def head(self) -> A | None:
     async for x in self._xs:
       return x
   
   def batch(self, n: int) -> 'AsyncIter[tuple[A, ...]]':
-    return AsyncIter(ops.batch(n, self))
+    return AsyncIter(batch(n, self))
   
   def enumerate(self) -> 'AsyncIter[tuple[int, A]]':
-    return AsyncIter(ops.enumerate(self))
+    return AsyncIter(enumerate(self))
   
   async def split(self, n: int) -> tuple[list[A], 'AsyncIter[A]']:
-    head, xs = await ops.split(n, self)
+    head, xs = await split(n, self)
     return head, AsyncIter(xs)
   
   def prefetch(self, n: int) -> 'AsyncIter[A]':
-    return AsyncIter(ops.prefetched(n, self))
+    return AsyncIter(prefetched(n, self))

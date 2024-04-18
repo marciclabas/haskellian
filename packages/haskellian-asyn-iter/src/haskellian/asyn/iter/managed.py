@@ -21,6 +21,9 @@ class ManagedIterable(Generic[T], AsyncIterator[T]):
     if not self._next.resolved:
       self._next.resolve()
 
+  def __aiter__(self) -> AsyncIterator[T]:
+    return self
+
   async def __anext__(self) -> T:
     if len(self.xs) > 0:
       return self.xs.pop(0)

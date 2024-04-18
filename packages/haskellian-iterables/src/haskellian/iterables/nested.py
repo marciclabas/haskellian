@@ -1,4 +1,5 @@
 from typing import Iterable, TypeVar, Callable
+from itertools import zip_longest
 import ramda as R
 from .basics import isiterable
 
@@ -104,6 +105,41 @@ def ndflat(xxs: Iterable[Iterable[A]], depth: int | None = None) -> Iterable[Ite
     """`ndflat([[x1, x2], [x3, [x4]]]) = [x1, x2, x3, x4]`"""
     return _auto_ndflat(xxs) if depth is None else _fixed_ndflat(xxs, depth)
 
-def transpose(xs: Iterable[Iterable[A]]) -> Iterable[list[A]]:
-    """`transpose([[1, 2], [3, 4], [5, 6]]) = [[1, 2, 3], [4, 5, 6]]`"""
-    return zip(*xs)
+def transpose(xs: Iterable[Iterable[A]]) -> list[list[A]]:
+    """Transpose a 2d list, cropping to the shortest row. E.g:
+    ```
+    transpose([
+        [1, 2],
+        [3, 4],
+        [5, 6]
+    ]) == [
+        [1, 3, 5],
+        [2, 4, 6]
+    ]
+    ```
+    but
+    ```
+    transpose([
+        [1, 2],
+        [3, 4],
+        [5]
+    ]) == [
+        [1, 2, 3],
+    ]
+    ```
+    """
+    return list(zip(*xs))
+
+def transpose_ragged(xs: Iterable[Iterable[A]]) -> list[list[A]]:
+    """Like `transpose`, but resulting rows can be ragged (i.e. have different lengths). E.g:
+    ```
+    transpose([
+        [1, 2],
+        [3, 4],
+        [5]
+    ]) == [
+        [1, 3, 5],
+        [2, 4]
+    ]
+    ```"""
+    return [[x for x in cols if x is not None] for cols in zip_longest(*xs)]

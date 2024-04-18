@@ -15,8 +15,12 @@ publish:
   {{PYTHON}} -m twine upload dist/*
   rm -drf dist
 
+# Increase patch version
+patch:
+  $BUMP pyproject.toml
+
 # Build and publish
-republish: build publish
+republish: patch build publish
 
 # Create venv and install requirements
 init:

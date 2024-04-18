@@ -50,7 +50,7 @@ def flatmap(f: Callable[[A], Iterable[B]]) -> Callable[[Iterable[A]], Iterable[B
 @curry
 def flatmap(f, xs):
     """Monadic `bind` on iterables. Aka `>>=`, `chain`"""
-    return flatten(map(f, xs))
+    return flatten(builtins.map(f, xs))
 
 def starmap(f: Callable[[*As], C]):
     """Curried version of `starmap`"""

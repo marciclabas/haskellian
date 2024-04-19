@@ -2,7 +2,7 @@ from typing import Generic, TypeVar, Literal, Callable, Any, TypeGuard
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-A = TypeVar('A', covariant=True)
+A = TypeVar('A')
 L = TypeVar('L', covariant=True)
 R = TypeVar('R', covariant=True)
 L2 = TypeVar('L2')
@@ -15,7 +15,7 @@ class IsLeft(BaseException, Generic[L]):
 class EitherBase(ABC, Generic[L, R]):
 
   @abstractmethod
-  def _match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> int:
+  def _match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
     """Unwrap an `Either` by matching both branches"""
   
   def match(self, on_left: Callable[[L], A], on_right: Callable[[R], A]) -> A:
@@ -29,7 +29,7 @@ class EitherBase(ABC, Generic[L, R]):
     (`IsLeft.value` will contain the wrapped value)"""
     
 
-  def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L2, R2]':
+  def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L|L2, R2]':
     return self.match(lambda x: Left(x), f)
 
   def fmap(self, f: Callable[[R], R2]) -> 'Either[L, R2]':
@@ -38,6 +38,9 @@ class EitherBase(ABC, Generic[L, R]):
   def mapl(self, f: Callable[[L], L2]) -> 'Either[L2, R]':
     """Map the left branch"""
     return self.match(lambda x: Left(f(x)), lambda x: Right(x))
+  
+  def get_or(self, fallback: A) -> A | R:
+    return self.match(lambda _: fallback, lambda x: x)
 
   __or__ = fmap
   """Alias of `fmap`"""
@@ -51,7 +54,7 @@ class EitherBase(ABC, Generic[L, R]):
   
 @dataclass
 class Left(EitherBase[L, R], Generic[L, R]):
-  value: L = None
+  value: L = None # type: ignore
   tag: Literal['left'] = 'left'
 
   def _match(self, on_left, on_right):
@@ -62,7 +65,7 @@ class Left(EitherBase[L, R], Generic[L, R]):
 
 @dataclass
 class Right(EitherBase[L, R], Generic[L, R]):
-  value: R = None
+  value: R = None # type: ignore
   tag: Literal['right'] = 'right'
 
   def _match(self, on_left, on_right):

@@ -27,6 +27,10 @@ class EitherBase(ABC, Generic[L, R]):
     """Unwraps the value or throws an `IsLeft` exception
     
     (`IsLeft.value` will contain the wrapped value)"""
+
+  def expect(self, error_msg) -> R:
+    """Unwraps the value or throws `IsLeft(error_msg)` exception"""
+    return self.mapl(lambda _: error_msg).unsafe()
     
 
   def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L|L2, R2]':

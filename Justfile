@@ -21,7 +21,7 @@ publish:
 
 # Increase patch version
 patch:
-  $BUMP pyproject.toml
+  $BUMP {{PKG}}/pyproject.toml
 
 # Build and publish
 republish: patch build publish

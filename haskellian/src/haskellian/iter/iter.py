@@ -18,7 +18,12 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def __repr__(self):
     previewed, rest = I.split(5, self.xs)
     self.xs = I.flatten([previewed, rest])
-    return f'Iter([{", ".join(str(x) for x in previewed)}, ...])'
+    if len(previewed) == 0:
+      return 'Iter([])'
+    elif len(previewed) < 5:
+      return f'Iter({previewed})'
+    else:
+      return f'Iter([{", ".join(str(x) for x in previewed)}, ...])'
 
   def __next__(self) -> A:
     for x in self.xs:
@@ -85,3 +90,4 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   
   def sync(self) -> list[A]:
     return list(self.xs)
+  

@@ -1,4 +1,4 @@
-from haskellian import DEBUG_IMPORTS
+from haskellian import DEBUG_IMPORTS, iter as I
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from typing import TypeVar, Literal, Callable, Iterable, overload, Any
@@ -8,11 +8,11 @@ A = TypeVar('A')
 B = TypeVar('B')
 
 @overload
-def ndmap(f: Callable[[A], B], xs: Iterable[Iterable[A]], depth: Literal[2] = 2) -> list[list[B]]: ...
-@overload
 def ndmap(f: Callable[[A], B], xs: Iterable[Iterable[Iterable[A]]], depth: Literal[3]) -> list[list[list[B]]]: ...
 @overload
 def ndmap(f: Callable[[A], B], xs: Iterable[Iterable[Iterable[Iterable[A]]]], depth: Literal[4]) -> list[list[list[list[B]]]]: ...
+@overload
+def ndmap(f: Callable[[A], B], xs: Iterable[Iterable[A]], depth: Literal[2] = 2) -> list[list[B]]: ...
 @overload
 def ndmap(f: Callable[[A], B], xs: Iterable, depth: int) -> list: ...
 def ndmap(f, xs, depth = 2):
@@ -20,13 +20,14 @@ def ndmap(f, xs, depth = 2):
 
 Range = int | tuple[int, int] | tuple[int, int, int]
 @overload
-def ndrange(rng1: Range) -> Iterable[tuple[int]]: ...
+def ndrange(rng1: Range) -> I.Iter[tuple[int]]: ...
 @overload
-def ndrange(rng1: Range, rng2: Range) -> Iterable[tuple[int, int]]: ...
+def ndrange(rng1: Range, rng2: Range) -> I.Iter[tuple[int, int]]: ...
 @overload
-def ndrange(rng1: Range, rng2: Range, rng3: Range) -> Iterable[tuple[int, int, int]]: ...
+def ndrange(rng1: Range, rng2: Range, rng3: Range) -> I.Iter[tuple[int, int, int]]: ...
 @overload
-def ndrange(*ranges: Range) -> Iterable[tuple[int, ...]]: ...
+def ndrange(*ranges: Range) -> I.Iter[tuple[int, ...]]: ...
+@I.lift
 def ndrange(*ranges): # type: ignore
   """Like `range`, but returns an iterable of `n`-tuples instead of ints.
   
@@ -60,6 +61,7 @@ def ndrange(*ranges): # type: ignore
   
   yield from _ndrange(*ranges)
 
+@I.lift
 def _fixed_ndenumerate(xxs, depth: int, inds: tuple[int, ...] = ()):
   if depth == 0:
     yield inds, xxs
@@ -67,6 +69,7 @@ def _fixed_ndenumerate(xxs, depth: int, inds: tuple[int, ...] = ()):
     for i, xs in enumerate(xxs):
       yield from _fixed_ndenumerate(xs, depth-1, inds + (i, ))
 
+@I.lift
 def _auto_ndenumerate(xxs, inds: tuple[int, ...] = ()):
   if not isiterable(xxs):
     yield inds, xxs
@@ -75,11 +78,12 @@ def _auto_ndenumerate(xxs, inds: tuple[int, ...] = ()):
       yield from _auto_ndenumerate(xs, inds + (i,))
 
 @overload
-def ndenumerate(xxs: Iterable[Iterable[A]], depth: Literal[2] | None = None) -> Iterable[tuple[tuple[int, int], A]]: ...
+def ndenumerate(xxs: Iterable[Iterable[A]], depth: Literal[2] | None = None) -> I.Iter[tuple[tuple[int, int], A]]: ...
 @overload
-def ndenumerate(xxs: Iterable[Iterable[Iterable[A]]], depth: Literal[3] | None = None) -> Iterable[tuple[tuple[int, int, int], A]]: ...
+def ndenumerate(xxs: Iterable[Iterable[Iterable[A]]], depth: Literal[3] | None = None) -> I.Iter[tuple[tuple[int, int, int], A]]: ...
 @overload
-def ndenumerate(xxs: Iterable, depth: int | None = None) -> Iterable[tuple[tuple[int, ...], Any]]: ...
+def ndenumerate(xxs: Iterable, depth: int | None = None) -> I.Iter[tuple[tuple[int, ...], Any]]: ...
+@I.lift
 def ndenumerate(xxs, depth: int | None = None): # type: ignore
   """Like `enumerate`, but for nested iterables.
   
@@ -120,11 +124,12 @@ def _auto_ndflat(xxs):
       yield from _auto_ndflat(xs)
       
 @overload
-def ndflat(xxs: Iterable[Iterable[A]], depth: Literal[2] | None = None) -> Iterable[Iterable[A]]: ...
+def ndflat(xxs: Iterable[Iterable[A]], depth: Literal[2] | None = None) -> I.Iter[I.Iter[A]]: ...
 @overload
-def ndflat(xxs: Iterable[Iterable[Iterable[A]]], depth: Literal[3] | None = None) -> Iterable[A]: ...
+def ndflat(xxs: Iterable[Iterable[Iterable[A]]], depth: Literal[3] | None = None) -> I.Iter[A]: ...
 @overload
-def ndflat(xxs: Iterable, depth: int | None = None) -> Iterable: ...
+def ndflat(xxs: Iterable, depth: int | None = None) -> I.Iter: ...
+@I.lift
 def ndflat(xxs: Iterable[Iterable[A]], depth: int | None = None): # type: ignore
   """`ndflat([[x1, x2], [x3, [x4]]]) = [x1, x2, x3, x4]`"""
   return _auto_ndflat(xxs) if depth is None else _fixed_ndflat(xxs, depth) # type: ignore

@@ -1,4 +1,4 @@
-from haskellian import DEBUG_IMPORTS
+from haskellian import DEBUG_IMPORTS, iter as I
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from typing import TypeVar, TypeVarTuple, Iterable, Callable
@@ -22,7 +22,8 @@ def head(xs: Iterable[A]) -> A | None:
   """`head([x, *_]) = x`"""
   for x in xs:
     return x
-  
+
+@I.lift
 def tail(xs: Iterable[A]) -> Iterable[A]:
 	"""`tail([_, *xs]) = xs`"""
 	return skip(1, xs)
@@ -33,16 +34,19 @@ def last(xs: Iterable[A]) -> A | None:
   if len(ys) > 0:
     return ys[-1]
 
+@I.lift
 def take(n: int | None, xs: Iterable[A]) -> Iterable[A]:
 	"""`take(n, [x1, ..., xn, *_]) = [x1, ..., xn]`"""
 	return itertools.islice(xs, n)
 
+@I.lift
 def take_while(pred: Callable[[A], bool], xs: Iterable[A]) -> Iterable[A]:
 	for x in xs:
 		if not pred(x):
 			return
 		yield x
-    
+
+@I.lift  
 def skip(n: int, xs: Iterable[A]) -> Iterable[A]:
 	"""`skip(n, [x1, ..., xn, *xs]) = xs`"""
 	return itertools.islice(xs, n, None)

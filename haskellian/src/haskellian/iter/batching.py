@@ -1,4 +1,4 @@
-from haskellian import DEBUG_IMPORTS
+from haskellian import DEBUG_IMPORTS, iter as I
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from typing import Iterable, TypeVar
@@ -14,6 +14,7 @@ def split(n: int, xs: Iterable[A]) -> tuple[list[A], Iterable[A]]:
     init = list(take(n, it))
     return init, (x for x in it)
 
+@I.lift
 def batch(n: int, xs: Iterable[A]) -> Iterable[tuple[A, ...]]:
     """Batches `xs` into `n`-tuples"""
     it = iter(xs)

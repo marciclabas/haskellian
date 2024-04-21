@@ -1,4 +1,4 @@
-from haskellian import DEBUG_IMPORTS
+from haskellian import DEBUG_IMPORTS, iter as I
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from typing import Iterable, TypeVar, overload
@@ -15,12 +15,13 @@ def unzip(xs):
     """`[(a, b, ...)] -> ([a], [b], ...)`"""
     return tuple(map(list, zip(*xs))) # type: ignore
 
-def uncons(xs: Iterable[A]) -> tuple[A | None, Iterable[A]]:
+def uncons(xs: Iterable[A]) -> tuple[A | None, I.Iter[A]]:
     """`uncons([x, *xs]) = (x, xs)`"""
     it = iter(xs)
     x = next(it, None)
-    return x, (x for x in it)
+    return x, I.Iter(it)
 
+@I.lift
 def pairwise(xs: Iterable[A]) -> Iterable[tuple[A, A]]:
     """`pairwise([x1, x2, x3, x4, ...]) = [(x1, x2), (x2, x3), (x3, x4), ...]`
     - `pairwise([]) = []`

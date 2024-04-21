@@ -1,0 +1,34 @@
+from haskellian import DEBUG_IMPORTS
+if DEBUG_IMPORTS:
+  print('Import:', __name__)
+from typing import Callable, Generic, TypeVar
+from abc import ABC, abstractmethod
+from .applicative import Applicative
+
+A = TypeVar('A', covariant=True)
+B = TypeVar('B')
+
+
+class Monad(Applicative[A], ABC, Generic[A]):
+  
+  @classmethod
+  @abstractmethod
+  def unit(cls, value: B) -> 'Monad[B]':
+    ...
+
+  @abstractmethod
+  def bind(self, f: Callable[[A], 'Monad[B]']) -> 'Monad[B]':
+    ...
+
+  def ap(self, f: 'Monad[Callable[[A], B]]') -> 'Monad[B]':
+    return f.bind(lambda func: self.bind(lambda x: self.unit(func(x))))
+  
+  def fmap(self, f: Callable[[A], B]) -> 'Monad[B]':
+    def lifted(a: A):
+      b = f(a)
+      return self.unit(b)
+    return self.bind(lifted)
+
+  @classmethod
+  def pure(cls, value: B) -> 'Monad[B]':
+    return cls.unit(value)

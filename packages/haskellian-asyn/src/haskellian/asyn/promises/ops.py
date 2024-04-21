@@ -31,3 +31,6 @@ async def all(xs):
     return dict(zip(keys, results))
   else:
     return await asyncio.gather(*xs)
+  
+async def all2d(xxs: Iterable[Iterable[Awaitable[T]]]) -> list[list[T]]:
+  return await all([all(xs) for xs in xxs])

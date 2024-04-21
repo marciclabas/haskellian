@@ -2,7 +2,7 @@ from typing import Iterable
 
 def isiterable(x, str_iterable = False, bytes_iterable = False) -> bool:
     """Is `x` iterable?
-    - `str_iterable`, `bytes_iterable`: wheter `str` and `bytes` are considered iterable
+    - `str_iterable`, `bytes_iterable`: whether `str` and `bytes` are considered iterable
     """
     return isinstance(x, Iterable) and \
       (not isinstance(x, str) or str_iterable) and \

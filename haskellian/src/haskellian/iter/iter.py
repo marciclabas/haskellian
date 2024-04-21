@@ -35,7 +35,7 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     return Iter([value])
   
   def bind(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':
-    return Iter(I.flatmap(f, self))
+    return I.flatmap(f, self)
   
   flatmap = bind
   
@@ -56,34 +56,33 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     return Iter(filter(p, self))
   
   def batch(self, n: int) -> 'Iter[tuple[A, ...]]':
-    return Iter(I.batch(n, self))
+    return I.batch(n, self)
   
   def head(self) -> A | None:
     return I.head(self)
   
   def tail(self) -> 'Iter[A]':
-    return Iter(I.tail(self))
+    return I.tail(self)
   
   def uncons(self) -> tuple[A | None, 'Iter[A]']:
-    x, xs = I.uncons(self)
-    return x, Iter(xs)
+    return I.uncons(self)
   
   def split(self, n: int) -> 'tuple[Iter[A], Iter[A]]':
     xs, ys = I.split(n, self)
     return Iter(xs), Iter(ys)
   
   def take(self, n: int) -> 'Iter[A]':
-    return Iter(I.take(n, self))
+    return I.take(n, self)
   
   def take_while(self, f: Callable[[A], bool]) -> 'Iter[A]':
-    return Iter(I.take_while(f, self))
+    return I.take_while(f, self)
   
   def at(self, i: int) -> A | None:
     for x in islice(self, i, None):
       return x
 
   def pairwise(self) -> 'Iter[tuple[A, A]]':
-    return Iter(I.pairwise(self))
+    return I.pairwise(self)
   
   def enumerate(self) -> 'Iter[tuple[int, A]]':
     return Iter(enumerate(self))

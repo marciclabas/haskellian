@@ -1,14 +1,23 @@
+from haskellian import DEBUG_IMPORTS, asyn_iter as AI, Monad
+if DEBUG_IMPORTS:
+  print('Import:', __name__)
 from typing import Callable, Generic, TypeVar, Awaitable, AsyncIterator, AsyncIterable, TypeGuard, overload, TypeVarTuple
-from ..ops import prefetched, map, amap, flatmap, filter, syncify, skip, batch, enumerate, split
 
-A = TypeVar('A')
+A = TypeVar('A', covariant=True)
 B = TypeVar('B')
 As = TypeVarTuple('As')
 
-class AsyncIter(Generic[A], AsyncIterator[A]):
+class AsyncIter(Monad[A], Generic[A], AsyncIterator[A]):
+
+  def __repr__(self):
+    return f'AsyncIter({self._xs})'
 
   def __init__(self, xs: AsyncIterable[A]):
     self._xs = xs
+
+  @classmethod
+  def of(cls, value: B) -> 'AsyncIter[B]':
+    return AsyncIter(AI.asyncify([value]))
 
   async def __anext__(self) -> A:
     async for x in self._xs:
@@ -16,44 +25,50 @@ class AsyncIter(Generic[A], AsyncIterator[A]):
     raise StopAsyncIteration()
   
   def map(self, f: Callable[[A], B]) -> 'AsyncIter[B]':
-    return AsyncIter(map(f, self))
+    return AI.map(f, self)
   
   __or__ = map
   
   def amap(self, f: Callable[[A], Awaitable[B]]) -> 'AsyncIter[B]':
-    return AsyncIter(amap(f, self))
+    return AI.amap(f, self)
+  
+  def bind(self, f: Callable[[A], AsyncIterable[B]]) -> 'AsyncIter[B]':
+    return AI.flatmap(f, self)
   
   def flatmap(self, f: Callable[[A], AsyncIterable[B]]) -> 'AsyncIter[B]':
-    return AsyncIter(flatmap(f, self))
+    """Alias of `bind`"""
+    return self.bind(f)
   
-  __and__ = flatmap
-
+  def __and__(self, f: Callable[[A], AsyncIterable[B]]) -> 'AsyncIter[B]':
+    """Alias of `bind`"""
+    return self.bind(f)
+  
   @overload
   def filter(self, p: Callable[[A], TypeGuard[B]]) -> 'AsyncIter[B]': ...
   @overload
   def filter(self, p: Callable[[A], bool]) -> 'AsyncIter[A]': ...
-  def filter(self, p: Callable[[A], bool]) -> 'AsyncIter[A]':
-    return AsyncIter(filter(p, self))
+  def filter(self, p): # type: ignore
+    return AI.filter(p, self)
 
   async def sync(self) -> list[A]:
-    return await syncify(self)
+    return await AI.syncify(self)
   
   def skip(self, n: int) -> 'AsyncIter[A]':
-    return AsyncIter(skip(n, self))
+    return AI.skip(n, self)
   
   async def head(self) -> A | None:
     async for x in self._xs:
       return x
   
   def batch(self, n: int) -> 'AsyncIter[tuple[A, ...]]':
-    return AsyncIter(batch(n, self))
+    return AI.batch(n, self)
   
   def enumerate(self) -> 'AsyncIter[tuple[int, A]]':
-    return AsyncIter(enumerate(self))
+    return AI.enumerate(self)
   
   async def split(self, n: int) -> tuple[list[A], 'AsyncIter[A]']:
-    head, xs = await split(n, self)
+    head, xs = await AI.split(n, self)
     return head, AsyncIter(xs)
   
   def prefetch(self, n: int) -> 'AsyncIter[A]':
-    return AsyncIter(prefetched(n, self))
+    return AI.prefetched(n, self)

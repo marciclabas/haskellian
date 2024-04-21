@@ -1,11 +1,13 @@
-from typing import TypeVar, Generic, Awaitable, Callable
+from haskellian import DEBUG_IMPORTS, promise as P
+if DEBUG_IMPORTS:
+  print('Import:', __name__)
+from typing import TypeVar, Generic
 import asyncio
-from haskellian import promise as P
 
 A = TypeVar('A', covariant=True)
 B = TypeVar('B')
 
-class ManagedPromise(P.Promise[A], Generic[A], Awaitable[A]):
+class ManagedPromise(P.Promise[A], Generic[A]):
   
   value: A
 

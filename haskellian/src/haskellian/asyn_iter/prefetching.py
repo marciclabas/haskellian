@@ -1,8 +1,12 @@
+from haskellian import DEBUG_IMPORTS, asyn_iter as AI
+if DEBUG_IMPORTS:
+  print('Import:', __name__)
 from typing import TypeVar, AsyncIterable
 import asyncio
 
 A = TypeVar('A')
 
+@AI.lift
 def prefetched(prefetch: int, xs: AsyncIterable[A]) -> AsyncIterable[A]:
     buffer = asyncio.Queue(maxsize=max(prefetch, 1))
     sentinel = object()

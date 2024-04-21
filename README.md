@@ -2,6 +2,10 @@
 
 > The functional programming library you need
 
+```bash
+pip install haskellian
+```
+
 ## Why
 - Lazy imports + stub files -> great linting and 0 import time
 - Monadic, method chaining style

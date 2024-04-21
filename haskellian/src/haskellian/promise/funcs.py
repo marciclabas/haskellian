@@ -14,15 +14,15 @@ async def then(f: Callable[[A], B], x: Awaitable[A]) -> B:
 async def bind(f: Callable[[A], Awaitable[B]], x: Awaitable[A]) -> B:
   return await f(await x)
 
-# @P.lift
+@P.lift
 async def of(x: A) -> A:
   return x
 
-# @P.lift
+@P.lift
 async def delay(secs: float):
   await asyncio.sleep(secs)
 
-# @P.lift
+@P.lift
 async def wait(x: A | Awaitable[A]) -> A:
   return await x if isawaitable(x) else x # type: ignore
 

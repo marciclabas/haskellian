@@ -31,7 +31,7 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     raise StopIteration()
 
   @classmethod
-  def unit(cls, value: B) -> 'Iter[B]':
+  def of(cls, value: B) -> 'Iter[B]':
     return Iter([value])
   
   def bind(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':

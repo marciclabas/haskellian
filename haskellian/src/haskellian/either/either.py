@@ -37,7 +37,7 @@ class EitherBase(Monad[R], ABC, Generic[L, R]):
     return self.mapl(lambda _: error_msg).unsafe()
     
   @classmethod
-  def unit(cls, x: A) -> 'Right[Any, A]':
+  def of(cls, x: A) -> 'Right[Any, A]':
     return Right(x)
 
   def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L|L2, R2]':

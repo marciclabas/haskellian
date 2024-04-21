@@ -13,7 +13,7 @@ class Monad(Applicative[A], ABC, Generic[A]):
   
   @classmethod
   @abstractmethod
-  def unit(cls, value: B) -> 'Monad[B]':
+  def of(cls, value: B) -> 'Monad[B]':
     ...
 
   @abstractmethod
@@ -21,14 +21,14 @@ class Monad(Applicative[A], ABC, Generic[A]):
     ...
 
   def ap(self, f: 'Monad[Callable[[A], B]]') -> 'Monad[B]':
-    return f.bind(lambda func: self.bind(lambda x: self.unit(func(x))))
+    return f.bind(lambda func: self.bind(lambda x: self.of(func(x))))
   
   def fmap(self, f: Callable[[A], B]) -> 'Monad[B]':
     def lifted(a: A):
       b = f(a)
-      return self.unit(b)
+      return self.of(b)
     return self.bind(lifted)
 
   @classmethod
   def pure(cls, value: B) -> 'Monad[B]':
-    return cls.unit(value)
+    return cls.of(value)

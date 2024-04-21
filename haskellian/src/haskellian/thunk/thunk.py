@@ -34,5 +34,5 @@ class Thunk(Monad[A], Generic[A]):
     return self.supplier()
   
   @classmethod
-  def unit(cls, value: A) -> 'Thunk[A]':
+  def of(cls, value: A) -> 'Thunk[A]':
     return cls(lambda: value)

@@ -33,5 +33,5 @@ class Pipe(Monad[A], Generic[A]):
     return self.fmap(f) # type: ignore
   
   @classmethod
-  def unit(cls, value: A) -> 'Pipe[A]':
+  def of(cls, value: A) -> 'Pipe[A]':
     return cls(value)

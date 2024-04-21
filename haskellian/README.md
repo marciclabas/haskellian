@@ -7,7 +7,7 @@ pip install haskellian
 ```
 
 ## Why
-- Lazy imports + stub files -> great linting and 0 import time
+- Lazy imports + stub files -> great linting and 0 import time (thanks to [`lazy-loader`](https://github.com/scientific-python/lazy_loader))
 - Monadic, method chaining style
 - Great typing and overloads
 

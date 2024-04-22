@@ -40,6 +40,10 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def flatmap(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':
     return self.bind(f)
   
+  def iflatmap(self, f: Callable[[int, A], Iterable[B]]) -> 'Iter[B]':
+    """`flatmap` with indices"""
+    return self.enumerate().flatmap(lambda xs: f(*xs))
+  
   def map(self, f: Callable[[A], B]) -> 'Iter[B]':
     return Iter(map(f, self))
   
@@ -74,6 +78,9 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   
   def take(self, n: int) -> 'Iter[A]':
     return I.take(n, self)
+  
+  def skip(self, n: int) -> 'Iter[A]':
+    return I.skip(n, self)
   
   def take_while(self, f: Callable[[A], bool]) -> 'Iter[A]':
     return I.take_while(f, self)

@@ -4,7 +4,7 @@ if DEBUG_IMPORTS:
 from dataclasses import dataclass
 from typing import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload
 from itertools import islice
-from haskellian import iter as I, Monad
+from haskellian import iter as I, Monad, Pipe
 
 A = TypeVar('A', covariant=True)
 B = TypeVar('B')
@@ -37,7 +37,8 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def bind(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':
     return I.flatmap(f, self)
   
-  flatmap = bind
+  def flatmap(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':
+    return self.bind(f)
   
   def map(self, f: Callable[[A], B]) -> 'Iter[B]':
     return Iter(map(f, self))
@@ -89,4 +90,12 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   
   def sync(self) -> list[A]:
     return list(self.xs)
+  
+  def i(self, f: Callable[['Iter[A]'], Iterable[B]]) -> 'Iter[B]':
+    """Apply an arbitrary iterable function"""
+    return Iter(f(self))
+  
+  def f(self, f: Callable[['Iter[A]'], B]) -> Pipe[B]:
+    """Apply an arbitrary function into a `Pipe`"""
+    return Pipe(f(self))
   

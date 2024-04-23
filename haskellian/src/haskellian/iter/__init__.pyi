@@ -1,5 +1,5 @@
 from .lifting import lift
-from .basics import isiterable, flatmap, flatten
+from .basics import isiterable, flatmap, flatten, range
 from .zipping import unzip, uncons, pairwise
 from .slicing import fst, snd, head, tail, last, skip, take, take_while
 from .indexing import at, pick
@@ -9,7 +9,7 @@ from .transposing import transpose, transpose_ragged
 from .iter import Iter
 
 __all__ = [
-  'isiterable', 'flatmap', 'flatten',
+  'isiterable', 'flatmap', 'flatten', 'range',
   'unzip', 'uncons', 'pairwise',
   'fst', 'snd', 'head', 'tail', 'last', 'skip', 'take', 'take_while',
   'at', 'pick',

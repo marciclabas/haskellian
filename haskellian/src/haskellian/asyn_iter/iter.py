@@ -53,12 +53,14 @@ class AsyncIter(Monad[A], Generic[A], AsyncIterator[A]):
   async def sync(self) -> list[A]:
     return await AI.syncify(self)
   
+  async def head(self) -> A | None:
+    return await AI.head(self)
+    
+  def take(self, n: int) -> 'AsyncIter[A]':
+    return AI.take(n, self)
+  
   def skip(self, n: int) -> 'AsyncIter[A]':
     return AI.skip(n, self)
-  
-  async def head(self) -> A | None:
-    async for x in self._xs:
-      return x
   
   def batch(self, n: int) -> 'AsyncIter[tuple[A, ...]]':
     return AI.batch(n, self)

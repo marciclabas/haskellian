@@ -55,6 +55,10 @@ async def asyncify(xs: Iterable[A]) -> AsyncIterable[A]:
 async def syncify(xs: AsyncIterable[A]) -> list[A]:
   return [x async for x in xs]
 
+async def head(xs: AsyncIterable[A]) -> A | None:
+  async for x in xs:
+    return x
+
 @AI.lift
 async def skip(n: int, xs: AsyncIterable[A]) -> AsyncIterable[A]:
   async for i, x in enumerate(xs):

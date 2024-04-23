@@ -2,7 +2,7 @@ from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from dataclasses import dataclass
-from typing import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload
+from typing import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload, Any
 from itertools import islice
 from haskellian import iter as I, Monad, Pipe
 
@@ -95,6 +95,15 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def enumerate(self) -> 'Iter[tuple[int, A]]':
     return Iter(enumerate(self))
   
+  def sort(self, key: Callable[[A], Any] | None = None, reverse: bool = False) -> 'Iter[A]':
+    return Iter(sorted(self, key=key, reverse=reverse)) # type: ignore
+  
+  def min(self, key: Callable[[A], Any] | None = None) -> A | None:
+    return min(self, key=key, default=None) # type: ignore
+  
+  def max(self, key: Callable[[A], Any] | None = None) -> A | None:
+    return max(self, key=key, default=None) # type: ignore
+  
   def sync(self) -> list[A]:
     return list(self.xs)
   
@@ -105,4 +114,3 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def f(self, f: Callable[['Iter[A]'], B]) -> Pipe[B]:
     """Apply an arbitrary function into a `Pipe`"""
     return Pipe(f(self))
-  

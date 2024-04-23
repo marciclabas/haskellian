@@ -24,3 +24,11 @@ def flatten(xs: Iterable[Iterable[A]]) -> Iterable[A]:
 @I.lift
 def flatmap(f: Callable[[A], Iterable[B]], xs: Iterable[A]) -> Iterable[B]:
   return flatten(map(f, xs))
+
+@I.lift
+def range(start: int = 0, end: int | None = None, step: int = 1) -> Iterable[int]:
+  """Like `range`, but possibly infinite (if `end is None`)"""
+  i = start
+  while end is None or i < end:
+    yield i
+    i += step

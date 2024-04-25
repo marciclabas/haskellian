@@ -1,4 +1,4 @@
-from haskellian import DEBUG_IMPORTS, asyn_iter as AI, Monad
+from haskellian import DEBUG_IMPORTS, asyn_iter as AI, Monad, Pipe
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from typing import Callable, Generic, TypeVar, Awaitable, AsyncIterator, AsyncIterable, TypeGuard, overload, TypeVarTuple
@@ -73,4 +73,13 @@ class AsyncIter(Monad[A], Generic[A], AsyncIterator[A]):
     return head, AsyncIter(xs)
   
   def prefetch(self, n: int) -> 'AsyncIter[A]':
-    return AI.prefetched(n, self)
+    return AI.prefetched(n, self) if n > 0 else self
+
+
+  def i(self, f: Callable[['AsyncIter[A]'], AsyncIterable[B]]) -> 'AsyncIter[B]':
+    """Apply an arbitrary iterable function"""
+    return AsyncIter(f(self))
+  
+  def f(self, f: Callable[['AsyncIter[A]'], B]) -> Pipe[B]:
+    """Apply an arbitrary function into a `Pipe`"""
+    return Pipe(f(self))

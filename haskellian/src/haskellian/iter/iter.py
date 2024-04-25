@@ -37,7 +37,8 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def bind(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':
     return I.flatmap(f, self)
   
-  def flatmap(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':
+  def flatmap(self, f: Callable[[A], Iterable[B]] = lambda x: x) -> 'Iter[B]': # type: ignore
+    """Acts like `flatten` by default (`f` defaults to the identity)"""
     return self.bind(f)
   
   def iflatmap(self, f: Callable[[int, A], Iterable[B]]) -> 'Iter[B]':
@@ -96,7 +97,11 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     return Iter(enumerate(self))
   
   def sort(self, key: Callable[[A], Any] | None = None, reverse: bool = False) -> 'Iter[A]':
+    """Like `sorted`, but returns an `Iter`"""
     return Iter(sorted(self, key=key, reverse=reverse)) # type: ignore
+  
+  def sorted(self, key: Callable[[A], Any] | None = None, reverse: bool = False) -> list[A]:
+    return sorted(self, key=key, reverse=reverse)
   
   def min(self, key: Callable[[A], Any] | None = None) -> A | None:
     return min(self, key=key, default=None) # type: ignore
@@ -106,6 +111,9 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   
   def sync(self) -> list[A]:
     return list(self.xs)
+  
+  def len(self) -> int:
+    return len(list(self))
   
   def i(self, f: Callable[['Iter[A]'], Iterable[B]]) -> 'Iter[B]':
     """Apply an arbitrary iterable function"""

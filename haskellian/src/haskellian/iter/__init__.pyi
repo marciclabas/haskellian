@@ -6,6 +6,7 @@ from .indexing import at, pick
 from .batching import batch, split
 from .nested import ndmap, ndrange, ndenumerate, ndflat
 from .transposing import transpose, transpose_ragged
+from .curried import map, filter, max, min, sorted
 from .iter import Iter
 
 __all__ = [
@@ -16,5 +17,6 @@ __all__ = [
   'batch', 'split',
   'ndmap', 'ndrange', 'ndenumerate', 'ndflat',
   'transpose', 'transpose_ragged',
-  'Iter', 'lift'
+  'map', 'filter', 'max', 'min', 'sorted',
+  'Iter', 'lift',
 ]

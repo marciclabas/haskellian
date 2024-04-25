@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS, promise as P
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import TypeVar, Generic
+from typing_extensions import TypeVar, Generic
 import asyncio
 
 A = TypeVar('A', covariant=True)

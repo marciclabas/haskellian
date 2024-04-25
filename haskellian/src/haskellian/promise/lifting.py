@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS, promise as P
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import ParamSpec, Callable, Awaitable, TypeVar
+from typing_extensions import ParamSpec, Callable, Awaitable, TypeVar
 from functools import wraps
 
 A = TypeVar('A')

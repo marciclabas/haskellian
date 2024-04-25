@@ -2,7 +2,7 @@ from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from dataclasses import dataclass
-from typing import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload, Any
+from typing_extensions import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload, Any
 from itertools import islice
 from haskellian import iter as I, Monad, Pipe
 

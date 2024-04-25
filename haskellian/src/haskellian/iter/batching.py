@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS, iter as I
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import Iterable, TypeVar
+from typing_extensions import Iterable, TypeVar
 import itertools
 from .slicing import take
 

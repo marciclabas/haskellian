@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import Callable, Generic, TypeVar
+from typing_extensions import Callable, Generic, TypeVar
 from abc import ABC, abstractmethod
 from .applicative import Applicative
 

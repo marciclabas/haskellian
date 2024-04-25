@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import Iterable, TypeVar
+from typing_extensions import Iterable, TypeVar
 
 A = TypeVar('A')
 

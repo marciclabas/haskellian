@@ -1,4 +1,4 @@
-from typing import TypeVar, Mapping, overload
+from typing_extensions import TypeVar, Mapping, overload
 
 D1 = TypeVar('D1', bound=Mapping)
 D2 = TypeVar('D2', bound=Mapping)

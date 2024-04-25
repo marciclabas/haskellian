@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS, iter as I, promise as P, Promise
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import TypeVar, Callable, Awaitable, Mapping, Iterable, overload
+from typing_extensions import TypeVar, Callable, Awaitable, Mapping, Iterable, overload
 from inspect import isawaitable
 import asyncio
 

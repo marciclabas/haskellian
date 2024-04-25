@@ -1,4 +1,4 @@
-from typing import Callable, TypeVar, ParamSpec, overload
+from typing_extensions import Callable, TypeVar, ParamSpec, overload
 from functools import reduce
 
 A = TypeVar('A')

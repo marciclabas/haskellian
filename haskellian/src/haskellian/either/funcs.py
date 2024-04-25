@@ -1,4 +1,4 @@
-from typing import TypeVar, Callable, Iterable
+from typing_extensions import TypeVar, Callable, Iterable
 from .either import Either, Left, Right
 
 R = TypeVar('R')

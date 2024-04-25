@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS, iter as I
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import ParamSpec, Callable, Iterable, TypeVar
+from typing_extensions import ParamSpec, Callable, Iterable, TypeVar
 from functools import wraps
 
 A = TypeVar('A')

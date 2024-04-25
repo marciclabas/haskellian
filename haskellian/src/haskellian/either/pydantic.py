@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing_extensions import TypeVar
 from .either import Either
 from .funcs import safe
 from pydantic import BaseModel, ValidationError

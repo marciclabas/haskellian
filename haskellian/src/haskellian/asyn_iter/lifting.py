@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS, asyn_iter as AI
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import ParamSpec, Callable, AsyncIterable, TypeVar
+from typing_extensions import ParamSpec, Callable, AsyncIterable, TypeVar
 from functools import wraps
 
 A = TypeVar('A')

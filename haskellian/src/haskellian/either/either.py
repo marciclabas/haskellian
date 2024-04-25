@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing import Generic, TypeVar, Literal, Callable, Any, TypeGuard
+from typing_extensions import Generic, TypeVar, Literal, Callable, Any, TypeGuard
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from haskellian import Monad

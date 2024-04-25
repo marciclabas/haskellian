@@ -2,7 +2,7 @@ from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from dataclasses import dataclass
-from typing import TypeVar, Callable, Generic
+from typing_extensions import TypeVar, Callable, Generic
 from haskellian import Monad
 
 A = TypeVar('A')

@@ -1,5 +1,5 @@
 import builtins
-from typing import Callable, TypeVar, Iterable, TypeGuard, overload
+from typing_extensions import Callable, TypeVar, Iterable, TypeGuard, overload
 
 A = TypeVar('A')
 B = TypeVar('B')

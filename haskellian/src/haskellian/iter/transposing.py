@@ -1,4 +1,4 @@
-from typing import Iterable, TypeVar
+from typing_extensions import Iterable, TypeVar
 from itertools import zip_longest
 
 A = TypeVar('A')

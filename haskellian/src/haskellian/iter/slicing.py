@@ -1,19 +1,19 @@
 from haskellian import DEBUG_IMPORTS, iter as I
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing_extensions import TypeVar, TypeVarTuple, Iterable, Callable
+from typing_extensions import TypeVar, TypeVarTuple, Iterable, Callable, Unpack
 import itertools
 
 A = TypeVar('A')
 B = TypeVar('B')
 As = TypeVarTuple('As')
 
-def fst(t: tuple[A, *As]) -> A:
+def fst(t: tuple[A, Unpack[As]]) -> A:
 	"""`fst((a, _)) = a`"""
 	x, *_ = t
 	return x
 
-def snd(t: tuple[A, B, *As]) -> B:
+def snd(t: tuple[A, B, Unpack[As]]) -> B:
 	"""`snd((_, b)) = b`"""
 	_, x, *_ = t
 	return x

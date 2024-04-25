@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS, asyn_iter as AI
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing_extensions import AsyncIterable, Awaitable, Callable, TypeVar, Iterable, TypeVarTuple
+from typing_extensions import AsyncIterable, Awaitable, Callable, TypeVar, Iterable, TypeVarTuple, Unpack
 
 A = TypeVar("A")
 B = TypeVar("B")
@@ -18,7 +18,7 @@ async def amap(f: Callable[[A], Awaitable[B]], xs: AsyncIterable[A]) -> AsyncIte
     yield await f(x)
 
 @AI.lift
-async def starmap(f: Callable[[*As], B], xs: AsyncIterable[tuple[*As]]) -> AsyncIterable[B]:
+async def starmap(f: Callable[[Unpack[As]], B], xs: AsyncIterable[tuple[Unpack[As]]]) -> AsyncIterable[B]:
   async for x in xs:
     yield f(*x)
 

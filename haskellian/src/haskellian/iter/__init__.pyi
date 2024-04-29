@@ -7,6 +7,7 @@ from .batching import batch, split
 from .nested import ndmap, ndrange, ndenumerate, ndflat
 from .transposing import transpose, transpose_ragged
 from .curried import map, filter, max, min, sorted
+from .searching import find_idx, find_last_idx
 from .iter import Iter
 
 __all__ = [
@@ -18,5 +19,6 @@ __all__ = [
   'ndmap', 'ndrange', 'ndenumerate', 'ndflat',
   'transpose', 'transpose_ragged',
   'map', 'filter', 'max', 'min', 'sorted',
+  'find_idx', 'find_last_idx',
   'Iter', 'lift',
 ]

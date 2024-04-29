@@ -101,7 +101,7 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     return Iter(sorted(self, key=key, reverse=reverse)) # type: ignore
   
   def sorted(self, key: Callable[[A], Any] | None = None, reverse: bool = False) -> list[A]:
-    return sorted(self, key=key, reverse=reverse)
+    return sorted(self, key=key, reverse=reverse) # type: ignore
   
   def min(self, key: Callable[[A], Any] | None = None) -> A | None:
     return min(self, key=key, default=None) # type: ignore
@@ -109,6 +109,12 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def max(self, key: Callable[[A], Any] | None = None) -> A | None:
     return max(self, key=key, default=None) # type: ignore
   
+  def find_idx(self, p: Callable[[A], bool]) -> int | None:
+    return I.find_idx(p, self)
+  
+  def find_last_idx(self, p: Callable[[A], bool]) -> int | None:
+    return I.find_last_idx(p, list(self))
+
   def sync(self) -> list[A]:
     return list(self.xs)
   

@@ -1,6 +1,6 @@
-from typing_extensions import Callable, TypeVar, ParamSpec, Generic
+from typing_extensions import Callable, TypeVar, ParamSpec, Generic, overload, Awaitable
+from inspect import iscoroutinefunction
 from functools import wraps
-from dataclasses import dataclass
 from .either import Either, Left, Right, IsLeft
 
 L = TypeVar('L')
@@ -19,11 +19,27 @@ class do(Generic[L]):
   myfn(Right(1)) # Right(2)
   ```
   """
+  @overload
+  def __call__(self, fn: Callable[P, Awaitable[R]]) -> Callable[P, Awaitable[Either[L, R]]]:
+    ...
+  @overload
   def __call__(self, fn: Callable[P, R]) -> Callable[P, Either[L, R]]:
-    @wraps(fn)
-    def wrapper(*args: P.args, **kwargs: P.kwargs):
-      try:
-        return Right(fn(*args, **kwargs))
-      except IsLeft as e:
-        return Left(e.value)
-    return wrapper
+    ...
+  
+  def __call__(self, fn): # type: ignore
+    if iscoroutinefunction(fn):
+      @wraps(fn)
+      async def _wrapper(*args: P.args, **kwargs: P.kwargs):
+        try:
+          return Right(await fn(*args, **kwargs))
+        except IsLeft as e:
+          return Left(e.value)
+      return _wrapper
+    else:
+      @wraps(fn)
+      def wrapper(*args: P.args, **kwargs: P.kwargs):
+        try:
+          return Right(fn(*args, **kwargs))
+        except IsLeft as e:
+          return Left(e.value)
+      return wrapper

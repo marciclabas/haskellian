@@ -46,6 +46,15 @@ def take_while(pred: Callable[[A], bool], xs: Iterable[A]) -> Iterable[A]:
 			return
 		yield x
 
+@I.lift
+def drop_while(pred: Callable[[A], bool], xs: Iterable[A]) -> Iterable[A]:
+	started = False
+	for x in xs:
+		if not started and not pred(x):
+			started = True
+		if started:
+			yield x
+
 @I.lift  
 def skip(n: int, xs: Iterable[A]) -> Iterable[A]:
 	"""`skip(n, [x1, ..., xn, *xs]) = xs`"""

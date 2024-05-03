@@ -1,6 +1,6 @@
 # Haskellian
 
-> The functional programming library you need
+> The python functional programming library you need
 
 ```bash
 pip install haskellian

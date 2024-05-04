@@ -1,12 +1,21 @@
 from haskellian import DEBUG_IMPORTS, iter as I, promise as P, Promise
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing_extensions import TypeVar, Callable, Awaitable, Mapping, Iterable, overload
+from typing_extensions import TypeVar, Callable, Awaitable, Mapping, Iterable, overload, ParamSpec, Coroutine, Any
+from functools import wraps
 from inspect import isawaitable
 import asyncio
 
 A = TypeVar('A')
 B = TypeVar('B')
+A = TypeVar('A')
+Ps = ParamSpec('Ps')
+
+def run(coro: Callable[Ps, Coroutine[Any, Any, A]]) -> Callable[Ps, A]:
+  @wraps(coro)
+  def _wrapped(*args: Ps.args, **kwargs: Ps.kwargs):
+    return asyncio.run(coro(*args, **kwargs))
+  return _wrapped
 
 async def then(f: Callable[[A], B], x: Awaitable[A]) -> B:
   return f(await x)

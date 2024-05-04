@@ -1,6 +1,7 @@
-from typing_extensions import TypeVar, Callable, Iterable
+from typing_extensions import TypeVar, Callable, Iterable, overload
 from .either import Either, Left, Right
 
+A = TypeVar('A')
 R = TypeVar('R')
 L = TypeVar('L')
 Err = TypeVar('Err', bound=Exception)
@@ -13,6 +14,13 @@ def safe(func: Callable[[], R], Exc: type[Err] = Exception) -> 'Either[Err, R]':
     
 def maybe(x: R | None) -> 'Either[None, R]':
   return Left(None) if x is None else Right(x)
+
+@overload
+def get_or(default: R) -> Callable[[Either[L, R]], R]: ...
+@overload
+def get_or(default: A) -> Callable[[Either[L, R]], R | A]: ...
+def get_or(default: A) -> Callable[[Either[L, R]], R | A]:
+  return lambda e: e.get_or(default)
 
 def unsafe(x: Either[L, R]) -> R:
   return x.unsafe()

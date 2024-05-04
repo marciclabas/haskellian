@@ -1,7 +1,7 @@
 from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
-from typing_extensions import Generic, TypeVar, Literal, Callable, Any, TypeGuard
+from typing_extensions import Generic, TypeVar, Literal, Callable, Any, overload
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from haskellian import Monad
@@ -50,7 +50,11 @@ class EitherBase(Monad[R], ABC, Generic[L, R]):
     """Map the left branch"""
     return self.match(lambda x: Left(f(x)), lambda x: Right(x))
   
-  def get_or(self, fallback: A) -> A | R:
+  @overload
+  def get_or(self, fallback: R) -> R: ... # type: ignore
+  @overload
+  def get_or(self, fallback: A) -> A | R: ...
+  def get_or(self, fallback): # type: ignore
     return self.match(lambda _: fallback, lambda x: x)
 
   def ap(self, f: 'Either[L, Callable[[R], R2]]') -> 'Either[L, R2]':

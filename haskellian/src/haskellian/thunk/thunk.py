@@ -18,9 +18,9 @@ class Thunk(Monad[A], Generic[A]):
   
   def bind(self, f: Callable[[A], 'Thunk[B]']) -> 'Thunk[B]':
     def _supplier():
-      value = self.get()
+      value = self()
       thunk = f(value)
-      value2 = thunk.get()
+      value2 = thunk()
       return value2
     return Thunk(_supplier)
   
@@ -30,7 +30,7 @@ class Thunk(Monad[A], Generic[A]):
   def __or__(self, f: Callable[[A], B]) -> 'Thunk[B]':
     return self.fmap(f)
   
-  def get(self) -> A:
+  def __call__(self) -> A:
     return self.supplier()
   
   @classmethod

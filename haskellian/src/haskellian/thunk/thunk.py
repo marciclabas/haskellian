@@ -12,9 +12,10 @@ B = TypeVar('B')
 class Thunk(Monad[A], Generic[A]):
 
   supplier: Callable[[], A]
+  value: A | None = None
 
   def fmap(self, f: Callable[[A], B]) -> 'Thunk[B]':
-    return Thunk(lambda: f(self.supplier()))
+    return Thunk(lambda: f(self()))
   
   def bind(self, f: Callable[[A], 'Thunk[B]']) -> 'Thunk[B]':
     def _supplier():
@@ -31,7 +32,9 @@ class Thunk(Monad[A], Generic[A]):
     return self.fmap(f)
   
   def __call__(self) -> A:
-    return self.supplier()
+    if self.value is None:
+      self.value = self.supplier()
+    return self.value
   
   @classmethod
   def of(cls, value: A) -> 'Thunk[A]':

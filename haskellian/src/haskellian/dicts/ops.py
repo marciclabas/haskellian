@@ -1,6 +1,7 @@
-from typing import Mapping, TypeVar, Callable, Iterable
+from typing import Mapping, TypeVar, Callable, Iterable, Sequence
 from haskellian import iter as I
 
+A = TypeVar('A')
 K = TypeVar('K')
 K1 = TypeVar('K1')
 K2 = TypeVar('K2')
@@ -32,3 +33,15 @@ def zip(xs: Mapping[K, Iterable[V]]) -> Iterable[dict[K, V]]:
       }
     except StopIteration:
       break
+
+def aggregate(f: Callable[[Sequence[V]], A], xs: Sequence[Mapping[K, V]]) -> Mapping[K, A]:
+  """Aggregate values with a same key
+  ```
+  aggregate(sum, [{'a': 1, 'b': 2}, {'a': 3, 'b': 4}])
+  # {'a': 4, 'b': 6}
+  ```
+  """
+  return {
+    key: f(list(I.pluck(xs, key)))
+    for key in xs[0].keys()
+  }

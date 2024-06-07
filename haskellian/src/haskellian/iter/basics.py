@@ -32,3 +32,9 @@ def range(start: int = 0, end: int | None = None, step: int = 1) -> Iterable[int
   while end is None or i < end:
     yield i
     i += step
+
+@I.lift
+def tap(f: Callable[[A], None], xs: Iterable[A]) -> Iterable[A]:
+	for x in xs:
+		f(x)
+		yield x

@@ -115,6 +115,9 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def find_last_idx(self, p: Callable[[A], bool]) -> int | None:
     return I.find_last_idx(p, list(self))
 
+  def tap(self, f: Callable[[A], Any]) -> 'Iter[A]':
+    return I.tap(f, self)
+
   def sync(self) -> list[A]:
     return list(self.xs)
   

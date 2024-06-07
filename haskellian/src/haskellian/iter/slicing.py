@@ -59,4 +59,3 @@ def drop_while(pred: Callable[[A], bool], xs: Iterable[A]) -> Iterable[A]:
 def skip(n: int, xs: Iterable[A]) -> Iterable[A]:
 	"""`skip(n, [x1, ..., xn, *xs]) = xs`"""
 	return itertools.islice(xs, n, None)
-

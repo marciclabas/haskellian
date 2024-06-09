@@ -60,6 +60,21 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def filter(self, p: Callable[[A], bool]) -> 'Iter[A]': ...
   def filter(self, p): # type: ignore
     return Iter(filter(p, self))
+
+  @overload
+  def reduce(self, f: Callable[[B, A], B], init: B) -> B: ...
+  @overload
+  def reduce(self, f: Callable[[A, A], A]) -> A | None: ...
+
+  def reduce(self, f, init=None): # type: ignore
+    from functools import reduce
+    if init is None:
+      init = self.head()
+      if init is not None:
+        return reduce(f, self, init)
+    else:
+      return reduce(f, self, init)
+
   
   def batch(self, n: int) -> 'Iter[tuple[A, ...]]':
     return I.batch(n, self)

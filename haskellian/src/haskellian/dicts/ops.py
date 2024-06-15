@@ -1,4 +1,4 @@
-from typing import Mapping, TypeVar, Callable, Iterable, Sequence
+from typing import Mapping, TypeVar, Callable, Iterable, Sequence, TypeGuard, overload
 from haskellian import iter as I
 
 A = TypeVar('A')
@@ -45,3 +45,24 @@ def aggregate(f: Callable[[Sequence[V]], A], xs: Sequence[Mapping[K, V]]) -> dic
     key: f(list(I.pluck(xs, key)))
     for key in xs[0].keys()
   }
+
+@overload
+def filter_v(f: Callable[[V1], TypeGuard[V2]], xs: Mapping[K, V1]) -> dict[K, V2]: ...
+@overload
+def filter_v(f: Callable[[V], bool], xs: Mapping[K, V]) -> dict[K, V]: ...
+def filter_v(f, xs):
+  return { k: v for k, v in xs.items() if f(v) }
+
+@overload
+def filter_k(f: Callable[[K1], TypeGuard[K2]], xs: Mapping[K1, V]) -> dict[K2, V]: ...
+@overload
+def filter_k(f: Callable[[K], bool], xs: Mapping[K, V]) -> dict[K, V]: ...
+def filter_k(f, xs):
+  return { k: v for k, v in xs.items() if f(k) }
+
+@overload
+def filter_kv(f: Callable[[K1, V1], TypeGuard[tuple[K2, V2]]], xs: Mapping[K1, V1]) -> dict[K2, V2]: ...
+@overload
+def filter_kv(f: Callable[[K, V], bool], xs: Mapping[K, V]) -> dict[K, V]: ...
+def filter_kv(f, xs):
+  return dict(f(k, v) for k, v in xs.items() if f(k, v))

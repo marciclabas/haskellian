@@ -12,7 +12,7 @@ B = TypeVar('B')
 @dataclass
 class Iter(Monad[A], Iterator[A], Generic[A]):
   
-  def __init__(self, xs: Iterable[A]):
+  def __init__(self, xs: Iterable[A] = []):
     self.xs = (x for x in xs)
 
   def __repr__(self):
@@ -138,6 +138,20 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   
   def len(self) -> int:
     return len(list(self))
+
+  @overload
+  def append(self, x: A) -> 'Iter[A]': ...
+  @overload
+  def append(self, x: B) -> 'Iter[A|B]': ...
+  def append(self, x):
+    return self.extend([x])
+
+  @overload
+  def extend(self, xs: Iterable[A]) -> 'Iter[A]': ...
+  @overload
+  def extend(self, xs: Iterable[A|B]) -> 'Iter[A|B]': ...
+  def extend(self, xs):
+    return I.flatten([self, xs])
   
   def i(self, f: Callable[['Iter[A]'], Iterable[B]]) -> 'Iter[B]':
     """Apply an arbitrary iterable function"""

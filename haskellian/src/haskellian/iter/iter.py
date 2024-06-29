@@ -79,6 +79,10 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def batch(self, n: int) -> 'Iter[tuple[A, ...]]':
     return I.batch(n, self)
   
+  def shard(self, min_size: float, size: Callable[[A], float]) -> 'Iter[list[A]]':
+    """Shards `self` into groups of at least `min_size` based on `size` (last shard may have less)"""
+    return I.shard(self, min_size, size)
+  
   def head(self) -> A | None:
     return I.head(self)
   
@@ -140,17 +144,17 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     return len(list(self))
 
   @overload
-  def append(self, x: A) -> 'Iter[A]': ...
+  def append(self, x: A) -> 'Iter[A]': ... # type: ignore
   @overload
   def append(self, x: B) -> 'Iter[A|B]': ...
-  def append(self, x):
+  def append(self, x): # type: ignore
     return self.extend([x])
 
   @overload
   def extend(self, xs: Iterable[A]) -> 'Iter[A]': ...
   @overload
   def extend(self, xs: Iterable[A|B]) -> 'Iter[A|B]': ...
-  def extend(self, xs):
+  def extend(self, xs): # type: ignore
     return I.flatten([self, xs])
   
   def i(self, f: Callable[['Iter[A]'], Iterable[B]]) -> 'Iter[B]':

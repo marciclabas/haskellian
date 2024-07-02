@@ -3,7 +3,7 @@ from .basics import isiterable, flatmap, flatten, range, tap
 from .zipping import unzip, uncons, pairwise
 from .slicing import fst, snd, head, tail, last, skip, take, take_while, drop_while
 from .indexing import at, pick
-from .batching import batch, split, shard
+from .batching import batch, split, shard, lazy_batch, lazy_shard
 from .nested import ndmap, ndrange, ndenumerate, ndflat
 from .transposing import transpose, transpose_ragged
 from .curried import map, filter, max, min, sorted
@@ -17,7 +17,7 @@ __all__ = [
   'unzip', 'uncons', 'pairwise', 'tap',
   'fst', 'snd', 'head', 'tail', 'last', 'skip', 'take', 'take_while', 'drop_while',
   'at', 'pick',
-  'batch', 'split', 'shard',
+  'batch', 'split', 'shard', 'lazy_batch', 'lazy_shard',
   'ndmap', 'ndrange', 'ndenumerate', 'ndflat',
   'transpose', 'transpose_ragged',
   'map', 'filter', 'max', 'min', 'sorted',

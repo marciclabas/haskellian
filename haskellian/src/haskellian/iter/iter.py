@@ -2,8 +2,7 @@ from haskellian import DEBUG_IMPORTS
 if DEBUG_IMPORTS:
   print('Import:', __name__)
 from dataclasses import dataclass
-from typing_extensions import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload, Any
-from itertools import islice
+from typing_extensions import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload, Any, Literal
 from haskellian import iter as I, Monad, Pipe
 
 A = TypeVar('A', covariant=True)
@@ -24,6 +23,11 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
       return f'Iter({previewed})'
     else:
       return f'Iter([{", ".join(str(x) for x in previewed)}, ...])'
+    
+  def empty(self) -> bool:
+    x, xs = I.split(1, self.xs)
+    self.xs = I.flatten([x, xs])
+    return len(x) == 0
 
   def __next__(self) -> A:
     for x in self.xs:
@@ -75,13 +79,20 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     else:
       return reduce(f, self, init)
 
+  @overload
+  def batch(self, n: int) -> 'Iter[tuple[A, ...]]': ...
+  @overload
+  def batch(self, n: int, *, lazy: Literal[True]) -> 'Iter[Iter[A]]': ...
+  def batch(self, n: int, *, lazy: bool = False):
+    return I.lazy_batch(n, self) if lazy else I.batch(n, self)
   
-  def batch(self, n: int) -> 'Iter[tuple[A, ...]]':
-    return I.batch(n, self)
-  
-  def shard(self, min_size: float, size: Callable[[A], float]) -> 'Iter[list[A]]':
+  @overload
+  def shard(self, min_size: float, size: Callable[[A], float]) -> 'Iter[list[A]]': ...
+  @overload
+  def shard(self, min_size: float, size: Callable[[A], float], *, lazy: Literal[True]) -> 'Iter[Iter[A]]': ...
+  def shard(self, min_size: float, size: Callable[[A], float], *, lazy: bool = False):
     """Shards `self` into groups of at least `min_size` based on `size` (last shard may have less)"""
-    return I.shard(self, min_size, size)
+    return I.lazy_shard(min_size, size, self) if lazy else I.shard(min_size, size, self)
   
   def head(self) -> A | None:
     return I.head(self)
@@ -106,8 +117,7 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     return I.take_while(f, self)
   
   def at(self, i: int) -> A | None:
-    for x in islice(self, i, None):
-      return x
+    return self.skip(i).head()
 
   def pairwise(self) -> 'Iter[tuple[A, A]]':
     return I.pairwise(self)

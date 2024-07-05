@@ -13,6 +13,9 @@ class ManagedAsync(AI.AsyncIter[A], Generic[A]):
     self._next = P.ManagedPromise()
     self.ended: bool = False
 
+  def __repr__(self):
+    return f'ManagedAsync({self.xs})'
+
   def push(self, value: A):
     self.xs.append(value)
     if not self._next.resolved:
@@ -22,6 +25,10 @@ class ManagedAsync(AI.AsyncIter[A], Generic[A]):
     self.ended = True
     if not self._next.resolved:
       self._next.resolve()
+
+  def clear(self):
+    self.xs = []
+    self.ended = False
 
   def __aiter__(self) -> AsyncIterator[A]:
     return self

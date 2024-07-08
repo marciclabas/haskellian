@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "haskellian"
-version = "0.3.42"
+version = "0.3.43"
 authors = [
   {name="Marcel Claramunt", email="marcel@moveread.com"}
 ]

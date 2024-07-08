@@ -14,7 +14,7 @@ def unsafe(x: T | None) -> T:
   return x
 
 @overload
-def do(fn: Callable[P, Awaitable[T]]) -> Callable[P, Coroutine[T | None, None, None]]:
+def do(fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
   ...
 @overload
 def do(fn: Callable[P, T]) -> Callable[P, T | None]:

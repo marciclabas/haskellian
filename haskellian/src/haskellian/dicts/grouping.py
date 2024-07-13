@@ -35,6 +35,16 @@ def zip(xs: Mapping[K, Iterable[V]]) -> Iterable['D.Dict[K, V]']:
       break
 
 @D.lift
+def unzip(xs: Sequence[Mapping[K, V]]) -> dict[K, list[V]]:
+  """`unzip([{'a': 1, 'b': 4}, {'a': 2, 'b': 5}, {'a': 3, 'b': 6}]) == { 'a': [1, 2, 3], 'b': [4, 5, 6] }`"""
+  from collections import defaultdict
+  out = defaultdict(list)
+  for x in xs:
+    for key, value in x.items():
+      out[key].append(value)
+  return dict(out)
+
+@D.lift
 def aggregate(f: Callable[[Sequence[V]], A], xs: Sequence[Mapping[K, V]]) -> dict[K, A]:
   """Aggregate values with a same key
   ```

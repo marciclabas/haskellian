@@ -1,7 +1,14 @@
-from .ops import map_k, map_kv, map_v, zip, aggregate, filter_k, filter_v, filter_kv
-from .grouping import group_by
+from .basics import Mapper, map, map_k, map_kv, filter, filter_k, flatmap, flatmap_k
+from .grouping import group_by, zip, aggregate
+from .dict import Dict
+from .lifting import lift
 
 __all__ = [
-  'map_k', 'map_kv', 'map_v', 'zip', 'aggregate',
-  'filter_k', 'filter_v', 'filter_kv', 'group_by'
+  'Mapper',
+  'map', 'map_k', 'map_kv',
+  'filter', 'filter_k',
+  'flatmap', 'flatmap_k',
+  'group_by', 'zip', 'aggregate',
+  'Dict',
+  'lift',
 ]

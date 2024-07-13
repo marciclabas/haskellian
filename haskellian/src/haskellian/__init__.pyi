@@ -6,6 +6,7 @@ from .either import Either, Left, Right, IsLeft
 from .promise import Promise, ManagedPromise
 from .iter import Iter
 from .asyn_iter import AsyncIter, ManagedAsync
+from .dicts import Dict
 
 __all__ = [
   'DEBUG_IMPORTS',
@@ -13,6 +14,6 @@ __all__ = [
   'Thunk', 'Pipe',
   'Either', 'Left', 'Right', 'IsLeft',
   'Promise', 'ManagedPromise',
-  'Iter',
+  'Iter', 'Dict',
   'AsyncIter', 'ManagedAsync'
 ]

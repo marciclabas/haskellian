@@ -20,7 +20,7 @@ def map(f: Mapper[K, V, V2], xs: Mapping[K, V]) -> dict[K, V2]:
 
 @D.lift
 def map_k(f: Callable[[K], K2], xs: Mapping[K, V]) -> dict[K2, V]:
-  return { apply(f, (k, v)): v for k, v in xs.items() }
+  return { f(k): v for k, v in xs.items() }
 
 @D.lift
 def map_kv(f: Mapper[K, V, tuple[K2, V2]], xs: Mapping[K, V]) -> dict[K2, V2]:

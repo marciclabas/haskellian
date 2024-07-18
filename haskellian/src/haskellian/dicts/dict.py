@@ -68,3 +68,6 @@ class Dict(Monad[tuple[K, V]], dict[K, V], Generic[K, V]):
     - Note: perhaps `f` is useful for something else, but it's just a dummy to make the types work.
     """
     return D.zip(self.map(f)) # type: ignore
+
+  def unpack(self, *keys: K) -> tuple[V, ...]:
+    return D.unpack(self, *keys)

@@ -2,6 +2,7 @@ from .basics import Mapper, map, map_k, map_kv, filter, filter_k, flatmap, flatm
 from .grouping import group_by, zip, unzip, aggregate
 from .dict import Dict
 from .lifting import lift
+from .structure import unpack
 
 __all__ = [
   'Mapper',
@@ -10,5 +11,5 @@ __all__ = [
   'flatmap', 'flatmap_k',
   'group_by', 'zip', 'unzip', 'aggregate',
   'Dict',
-  'lift',
+  'lift', 'unpack',
 ]

@@ -6,11 +6,22 @@ from typing_extensions import Iterable, TypeVar, overload
 A = TypeVar('A')
 B = TypeVar('B')
 C = TypeVar('C')
+D = TypeVar('D')
+E = TypeVar('E')
+F = TypeVar('F')
 
 @overload
 def unzip(xs: Iterable[tuple[A, B]]) -> tuple[list[A], list[B]]: ...
 @overload
 def unzip(xs: Iterable[tuple[A, B, C]]) -> tuple[list[A], list[B], list[C]]: ...
+@overload
+def unzip(xs: Iterable[tuple[A, B, C, D]]) -> tuple[list[A], list[B], list[C], list[D]]: ...
+@overload
+def unzip(xs: Iterable[tuple[A, B, C, D, E]]) -> tuple[list[A], list[B], list[C], list[D], list[E]]: ...
+@overload
+def unzip(xs: Iterable[tuple[A, B, C, D, E, F]]) -> tuple[list[A], list[B], list[C], list[D], list[E], list[F]]: ...
+@overload
+def unzip(xs: Iterable[tuple[A, ...]]) -> tuple[list[A], ...]: ...
 def unzip(xs):
     """`[(a, b, ...)] -> ([a], [b], ...)`"""
     return tuple(map(list, zip(*xs))) # type: ignore

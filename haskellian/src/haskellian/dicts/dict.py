@@ -71,3 +71,6 @@ class Dict(Monad[tuple[K, V]], dict[K, V], Generic[K, V]):
 
   def unpack(self, *keys: K) -> tuple[V, ...]:
     return D.unpack(self, *keys)
+  
+  def evolve(self, mappers: Mapping[K, Callable[[V], V2]]) -> 'Dict[K, V|V2]':
+    return D.evolve(mappers, self)

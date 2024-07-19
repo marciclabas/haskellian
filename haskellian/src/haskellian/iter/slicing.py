@@ -59,3 +59,13 @@ def drop_while(pred: Callable[[A], bool], xs: Iterable[A]) -> Iterable[A]:
 def skip(n: int, xs: Iterable[A]) -> Iterable[A]:
 	"""`skip(n, [x1, ..., xn, *xs]) = xs`"""
 	return itertools.islice(xs, n, None)
+
+@I.lift
+def pad(n: int, fill: B, xs: Iterable[A]) -> Iterable[A|B]:
+	"""Pads `xs` to length `n`, appending `fill`s as needed"""
+	i = 0
+	for i, x in enumerate(xs):
+		yield x
+		
+	for _ in range(i+1, n):
+		yield fill

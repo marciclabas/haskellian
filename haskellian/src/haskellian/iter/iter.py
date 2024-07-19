@@ -150,6 +150,9 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def tap(self, f: Callable[[A], Any]) -> 'Iter[A]':
     return I.tap(f, self)
 
+  def pad(self, n: int, fill: B) -> 'Iter[A|B]':
+    return I.pad(n, fill, self)
+
   def sync(self) -> list[A]:
     return list(self.xs)
   

@@ -11,30 +11,18 @@ pip install haskellian
 - Monadic, method chaining style
 - Great typing and overloads
 
-```python
-from haskellian import either as E, iter as I, promise as P, Pipe, asyn_iter as AI
-```
 
-#### `Pipe[A]` (simplest monad ever)
-
-```python
-Pipe('world hello') \
-.f(str.title) \
-.f(lambda s: s.split(' ')) \
-.f(sorted) \
-.f(', '.join) \
-.value
-# 'Hello, World'
-```
 #### `Iter[A]` (generators made ergonomic)
 
 ```python
-I.Iter(range(100000000000)) \
-.map(lambda x: 2*x) \
-.filter(lambda x: x % 2 == 0) \
-.batch(2) \
-.tail()
-#.sync() # don't recommend it...
+from haskellian import Iter
+
+Iter(range(100000000000)) \
+  .map(lambda x: 2*x) \
+  .filter(lambda x: x % 2 == 0) \
+  .batch(2) \
+  .skip(1)
+  #.sync() # don't recommend it...
 
 # Iter([(4, 6), (8, 10), (12, 14), (16, 18), (20, 22), ...])
 ```
@@ -42,14 +30,16 @@ I.Iter(range(100000000000)) \
 #### `Promise[A]` (awaitables made ergonomic)
 
 ```python
+from haskellian import Promise, promise as P
+
 async def fetch_users() -> list[str]:
   ...
 async def fetch_user(id) -> str:
   ...
 
-await P.Promise(fetch_users()) \
-.bind(lambda ids: P.all(map(fetch_user, ids))) \
-.then(sorted)
+await Promise(fetch_users()) \
+  .bind(lambda ids: P.all(map(fetch_user, ids))) \
+  .then(sorted)
 ```
 
 #### `Either[L, R]`
@@ -88,4 +78,27 @@ def print_one():
 
 > Explanation: `.unsafe()` raises an `IsLeft` exception; `@E.do()` simply wraps the function in a `try...except IsLeft` block, returning the raised `Left` if so.
 
-#### `AsyncIter[A]` (self-explanatory at this point, right?)
+#### `AsynIter[A]` 
+
+```python
+from haskellian import AsynIter, asyn_iter as AI
+
+@AI.lift
+async def gen():
+  for i in range(10):
+    yield i
+
+await gen().map(lambda x: 2*x).filter(lambda x: x % 2 == 0).batch(2).skip(1).sync()
+```
+
+### `Dict[A]`
+
+```python
+from haskellian import Dict
+
+Dict({'a': 1, 'b': 2}) \
+  .filter(lambda v: v % 2 == 0) \
+  .map(lambda v: 2*v) \
+
+# Dict({'b': 4})
+```

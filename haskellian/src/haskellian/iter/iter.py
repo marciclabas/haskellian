@@ -173,6 +173,9 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def extend(self, xs): # type: ignore
     return I.flatten([self, xs])
   
+  def shuffle(self, shuffle_size: int) -> 'Iter[A]':
+    return I.shuffle(self, shuffle_size)
+  
   def i(self, f: Callable[['Iter[A]'], Iterable[B]]) -> 'Iter[B]':
     """Apply an arbitrary iterable function"""
     return Iter(f(self))

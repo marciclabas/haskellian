@@ -1,7 +1,5 @@
-from haskellian import DEBUG_IMPORTS, iter as I
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
-from typing_extensions import Iterable, TypeVar, overload
+from haskellian import iter as I
+from typing_extensions import Iterable, TypeVar, overload, Sequence
 
 A = TypeVar('A')
 B = TypeVar('B')
@@ -42,3 +40,22 @@ def pairwise(xs: Iterable[A]) -> Iterable[tuple[A, A]]:
     for x1 in tail:
         yield x0, x1 # type: ignore (`x0` won't be `None` if there's some element in `tail`)
         x0 = x1
+
+@I.lift
+def interleave(xs: Sequence[Iterable[A]], weights: Sequence[int]) -> Iterable[A]:
+  """Interleave multiple iterators based on their weight.
+  - `xs[i]` is yielded `weights[i]` times before moving to the next iterator.
+  """
+  assert len(xs) == len(weights)
+  iters = [iter(it) for it in xs]
+  weights = list(weights)
+  while True:
+    for i, (w, it) in enumerate(zip(weights, iters)):
+      try:
+        for _ in range(w):
+          yield next(it)
+      except StopIteration:
+        weights.pop(i)
+        iters.pop(i)
+        if not weights:
+          return

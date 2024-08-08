@@ -42,12 +42,12 @@ def pairwise(xs: Iterable[A]) -> Iterable[tuple[A, A]]:
         x0 = x1
 
 @I.lift
-def interleave(xs: Sequence[Iterable[A]], weights: Sequence[int]) -> Iterable[A]:
+def interleave(xs: Sequence[tuple[int, Iterable[A]]]) -> Iterable[A]:
   """Interleave multiple iterators based on their weight.
-  - `xs[i]` is yielded `weights[i]` times before moving to the next iterator.
+  - `(weight, iter) = xs[i]`: `iter` is yielded `weight` times before moving to the next iterator.
   """
-  assert len(xs) == len(weights)
-  iters = [iter(it) for it in xs]
+  weights, iters = I.unzip(xs)
+  iters = [iter(it) for it in iters]
   weights = list(weights)
   while True:
     for i, (w, it) in enumerate(zip(weights, iters)):

@@ -20,17 +20,20 @@ def group_by(f: Callable[[V], K], xs: Iterable[V]) -> dict[K, list[V]]:
 
 @I.lift
 def zip(xs: Mapping[K, Iterable[V]]) -> Iterable['D.Dict[K, V]']:
-  """`zip({ 'a': [1, 2, 3], 'b': [4, 5, 6] }) == [{'a': 1, 'b': 4}, {'a': 2, 'b': 5}, {'a': 3, 'b': 6}]`"""
+  """`zip({ 'a': [1, 2, 3], 'b': [4, 5, 6] }) == [{'a': 1, 'b': 4}, {'a': 2, 'b': 5}, {'a': 3, 'b': 6}]`
+  - Ignores keys with non-iterable values
+  """
   iters = {
     key: iter(it)
     for key, it in xs.items()
+      if isinstance(it, Iterable)
   }
   while True:
     try:
       yield D.Dict({
         key: next(it)
         for key, it in iters.items()
-      })
+      }) # type: ignore
     except StopIteration:
       break
 

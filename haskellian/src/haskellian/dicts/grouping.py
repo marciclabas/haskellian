@@ -26,7 +26,7 @@ def zip(xs: Mapping[K, Iterable[V]]) -> Iterable['D.Dict[K, V]']:
   iters = {
     key: iter(it)
     for key, it in xs.items()
-      if isinstance(it, Iterable)
+      if I.isiterable(it)
   }
   while True:
     try:

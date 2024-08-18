@@ -16,4 +16,5 @@ def shuffle(xs: Iterable[A], shuffle_size: int) -> Iterable[A]:
       yield reservoir[i]
       reservoir[i] = x
   
+  random.shuffle(reservoir)
   yield from reservoir

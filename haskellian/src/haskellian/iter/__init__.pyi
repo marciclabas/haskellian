@@ -9,7 +9,7 @@ from .transposing import transpose, transpose_ragged
 from .curried import map, filter, max, min, sorted
 from .searching import find_idx, find_last_idx, find, find_last
 from .maps import pluck
-from .misc import shuffle
+from .misc import shuffle, repeat, oversample, undersample
 from .iter import Iter
 
 __all__ = [
@@ -23,5 +23,5 @@ __all__ = [
   'transpose', 'transpose_ragged',
   'map', 'filter', 'max', 'min', 'sorted',
   'find_idx', 'find_last_idx', 'find', 'find_last',
-  'Iter', 'lift', 'interleave', 'shuffle',
+  'Iter', 'lift', 'interleave', 'shuffle', 'repeat', 'oversample', 'undersample',
 ]

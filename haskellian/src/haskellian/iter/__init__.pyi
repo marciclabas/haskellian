@@ -1,7 +1,7 @@
 from .lifting import lift
 from .basics import isiterable, flatmap, flatten, range, tap
 from .zipping import unzip, uncons, pairwise, interleave
-from .slicing import fst, snd, head, tail, last, skip, take, take_while, drop_while, pad
+from .slicing import fst, snd, head, tail, last, skip, take, take_while, drop_while, pad, every
 from .indexing import at, pick
 from .batching import batch, split, shard, lazy_batch, lazy_shard
 from .nested import ndmap, ndrange, ndenumerate, ndflat
@@ -16,7 +16,7 @@ __all__ = [
   'isiterable', 'flatmap', 'flatten', 'range',
   'pluck',
   'unzip', 'uncons', 'pairwise', 'tap',
-  'fst', 'snd', 'head', 'tail', 'last', 'skip', 'take', 'take_while', 'drop_while',
+  'fst', 'snd', 'head', 'tail', 'last', 'skip', 'take', 'take_while', 'drop_while', 'every',
   'at', 'pick', 'pad',
   'batch', 'split', 'shard', 'lazy_batch', 'lazy_shard',
   'ndmap', 'ndrange', 'ndenumerate', 'ndflat',

@@ -110,6 +110,9 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def skip(self, n: int) -> 'Iter[A]':
     return I.skip(n, self)
   
+  def every(self, n: int) -> 'Iter[A]':
+    return I.every(n, self)
+  
   def take_while(self, f: Callable[[A], bool]) -> 'Iter[A]':
     return I.take_while(f, self)
   

@@ -61,6 +61,15 @@ def skip(n: int, xs: Iterable[A]) -> Iterable[A]:
 	return itertools.islice(xs, n, None)
 
 @I.lift
+def every(n: int, xs: Iterable[A]) -> Iterable[A]:
+	"""Take every `n`th element of `xs`
+	- `every(3, range(10)) == Iter([0, 3, 6, 9])`
+	"""
+	for i, x in enumerate(xs):
+		if i % n == 0:
+			yield x
+
+@I.lift
 def pad(n: int, fill: B, xs: Iterable[A]) -> Iterable[A|B]:
 	"""Pads `xs` to length `n`, appending `fill`s as needed"""
 	i = 0

@@ -1,1 +1,0 @@
-from .pipe import Pipe

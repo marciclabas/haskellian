@@ -1,6 +1,3 @@
-from haskellian import DEBUG_IMPORTS
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
 from typing_extensions import TypeVar, TypeGuard
 from .either import Either, Left, Right
 

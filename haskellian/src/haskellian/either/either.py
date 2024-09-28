@@ -1,6 +1,3 @@
-from haskellian import DEBUG_IMPORTS
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
 from typing_extensions import Generic, TypeVar, Literal, Callable, Any, overload
 from dataclasses import dataclass
 from abc import ABC, abstractmethod

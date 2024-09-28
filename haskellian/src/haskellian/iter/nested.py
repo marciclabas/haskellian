@@ -1,6 +1,3 @@
-from haskellian import DEBUG_IMPORTS, iter as I
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
 from typing_extensions import TypeVar, Literal, Callable, Iterable, overload, Any
 from .basics import isiterable
 

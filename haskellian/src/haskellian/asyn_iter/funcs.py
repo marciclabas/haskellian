@@ -1,7 +1,5 @@
-from haskellian import DEBUG_IMPORTS, asyn_iter as AI
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
 from typing_extensions import AsyncIterable, Awaitable, Callable, TypeVar, Iterable, TypeVarTuple, Unpack
+from haskellian import asyn_iter as AI
 
 A = TypeVar("A")
 B = TypeVar("B")

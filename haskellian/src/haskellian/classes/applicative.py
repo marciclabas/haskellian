@@ -1,6 +1,3 @@
-from haskellian import DEBUG_IMPORTS
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
 from typing_extensions import Callable, Generic, TypeVar
 from abc import ABC, abstractmethod
 from .functor import Functor

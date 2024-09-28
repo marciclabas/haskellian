@@ -1,6 +1,4 @@
-from haskellian import DEBUG_IMPORTS, asyn_iter as AI, Monad, Pipe
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
+from haskellian import asyn_iter as AI, Monad
 from typing_extensions import Callable, Generic, TypeVar, Awaitable, AsyncIterator, AsyncIterable, TypeGuard, overload, TypeVarTuple
 
 A = TypeVar('A', covariant=True)

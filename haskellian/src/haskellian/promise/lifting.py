@@ -1,6 +1,4 @@
-from haskellian import DEBUG_IMPORTS, promise as P
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
+from haskellian import promise as P
 from typing_extensions import ParamSpec, Callable, Awaitable, TypeVar
 from functools import wraps
 

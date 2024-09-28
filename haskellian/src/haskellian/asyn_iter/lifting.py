@@ -1,6 +1,4 @@
-from haskellian import DEBUG_IMPORTS, asyn_iter as AI
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
+from haskellian import asyn_iter as AI
 from typing_extensions import ParamSpec, Callable, AsyncIterable, TypeVar
 from functools import wraps
 

@@ -1,6 +1,4 @@
-from haskellian import DEBUG_IMPORTS, Monad, promise as P
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
+from haskellian import Monad, promise as P
 from typing_extensions import TypeVar, Generic, Callable, Awaitable
 
 A = TypeVar('A', covariant=True)

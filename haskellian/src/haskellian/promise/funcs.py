@@ -1,6 +1,4 @@
-from haskellian import DEBUG_IMPORTS, iter as I, promise as P, Promise
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
+from haskellian import iter as I, promise as P, Promise
 from typing_extensions import TypeVar, Callable, Awaitable, Mapping, Iterable, overload, ParamSpec, Coroutine, Any
 from functools import wraps
 from inspect import isawaitable

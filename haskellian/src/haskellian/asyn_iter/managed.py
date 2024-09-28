@@ -1,6 +1,4 @@
-from haskellian import DEBUG_IMPORTS, asyn_iter as AI, promise as P
-if DEBUG_IMPORTS:
-  print('Import:', __name__)
+from haskellian import asyn_iter as AI, promise as P
 from typing_extensions import TypeVar, Generic, AsyncIterator
 
 A = TypeVar('A')

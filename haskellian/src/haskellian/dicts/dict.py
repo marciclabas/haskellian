@@ -13,7 +13,7 @@ class Dict(Monad[tuple[K, V]], dict[K, V], Generic[K, V]):
     return f'Dict({super().__repr__()})'
 
   @classmethod
-  def of(cls, x: tuple[K, V]):
+  def of(cls, x: tuple[K, V]): # type: ignore
     return cls(dict([x]))
   
   def flatmap(self, f: Callable[[K, V], Mapping[K2, V2]]) -> 'Dict[K2, V2]':

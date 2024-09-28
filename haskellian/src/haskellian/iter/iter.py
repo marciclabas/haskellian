@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing_extensions import Generic, TypeVar, Callable, TypeGuard, Iterator, Iterable, overload, Any, Literal
-from haskellian import iter as I, Monad, Pipe
+from haskellian import iter as I, Monad
 
 A = TypeVar('A', covariant=True)
 B = TypeVar('B')
@@ -35,7 +35,7 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
   def of(cls, value: B) -> 'Iter[B]':
     return Iter([value])
   
-  def bind(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]':
+  def bind(self, f: Callable[[A], Iterable[B]]) -> 'Iter[B]': # type: ignore
     return I.flatmap(f, self)
   
   def flatmap(self, f: Callable[[A], Iterable[B]] = lambda x: x) -> 'Iter[B]': # type: ignore
@@ -183,6 +183,3 @@ class Iter(Monad[A], Iterator[A], Generic[A]):
     """Apply an arbitrary iterable function"""
     return Iter(f(self))
   
-  def f(self, f: Callable[['Iter[A]'], B]) -> Pipe[B]:
-    """Apply an arbitrary function into a `Pipe`"""
-    return Pipe(f(self))

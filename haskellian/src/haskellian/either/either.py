@@ -34,13 +34,13 @@ class EitherBase(Monad[R], ABC, Generic[L, R]):
     return self.mapl(lambda _: error_msg).unsafe()
     
   @classmethod
-  def of(cls, x: A) -> 'Right[Any, A]':
+  def of(cls, x: A) -> 'Right[Any, A]': # type: ignore
     return Right(x)
 
-  def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L|L2, R2]':
+  def bind(self, f: 'Callable[[R], Either[L2, R2]]') -> 'Either[L|L2, R2]': # type: ignore
     return self.match(lambda x: Left(x), f)
 
-  def fmap(self, f: Callable[[R], R2]) -> 'Either[L, R2]':
+  def fmap(self, f: Callable[[R], R2]) -> 'Either[L, R2]': # type: ignore
     return super().fmap(f) # type: ignore
 
   def mapl(self, f: Callable[[L], L2]) -> 'Either[L2, R]':
@@ -54,7 +54,7 @@ class EitherBase(Monad[R], ABC, Generic[L, R]):
   def get_or(self, fallback): # type: ignore
     return self.match(lambda _: fallback, lambda x: x)
 
-  def ap(self, f: 'Either[L, Callable[[R], R2]]') -> 'Either[L, R2]':
+  def ap(self, f: 'Either[L, Callable[[R], R2]]') -> 'Either[L, R2]': # type: ignore
     return super().ap(f) # type: ignore
   
   def __or__(self, f: Callable[[R], R2]) -> 'Either[L, R2]':

@@ -1,5 +1,6 @@
 from typing_extensions import TypeVar, TypeVarTuple, Iterable, Callable, Unpack
 import itertools
+from haskellian import iter as I
 
 A = TypeVar('A')
 B = TypeVar('B')

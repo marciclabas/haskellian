@@ -17,7 +17,7 @@ class Monad(Applicative[A], ABC, Generic[A]):
   def bind(self, f: Callable[[A], 'Monad[B]']) -> 'Monad[B]':
     ...
 
-  def ap(self, f: 'Monad[Callable[[A], B]]') -> 'Monad[B]':
+  def ap(self, f: 'Monad[Callable[[A], B]]') -> 'Monad[B]': # type: ignore
     return f.bind(lambda func: self.bind(lambda x: self.of(func(x))))
   
   def fmap(self, f: Callable[[A], B]) -> 'Monad[B]':

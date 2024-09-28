@@ -30,7 +30,7 @@ class AsyncIter(Monad[A], Generic[A], AsyncIterator[A]):
   def amap(self, f: Callable[[A], Awaitable[B]]) -> 'AsyncIter[B]':
     return AI.amap(f, self)
   
-  def bind(self, f: Callable[[A], AsyncIterable[B]]) -> 'AsyncIter[B]':
+  def bind(self, f: Callable[[A], AsyncIterable[B]]) -> 'AsyncIter[B]': # type: ignore
     return AI.flatmap(f, self)
   
   def flatmap(self, f: Callable[[A], AsyncIterable[B]]) -> 'AsyncIter[B]':
@@ -78,6 +78,3 @@ class AsyncIter(Monad[A], Generic[A], AsyncIterator[A]):
     """Apply an arbitrary iterable function"""
     return AsyncIter(f(self))
   
-  def f(self, f: Callable[['AsyncIter[A]'], B]) -> Pipe[B]:
-    """Apply an arbitrary function into a `Pipe`"""
-    return Pipe(f(self))

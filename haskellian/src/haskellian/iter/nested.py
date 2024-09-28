@@ -1,4 +1,5 @@
 from typing_extensions import TypeVar, Literal, Callable, Iterable, overload, Any
+from haskellian import iter as I
 from .basics import isiterable
 
 A = TypeVar('A')

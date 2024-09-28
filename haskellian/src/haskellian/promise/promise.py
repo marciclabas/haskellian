@@ -16,14 +16,14 @@ class Promise(Monad[A], Generic[A], Awaitable[A]):
     return self.x.__await__()
   
   @classmethod
-  def of(cls, x: B) -> 'Promise[B]':
+  def of(cls, x: B) -> 'Promise[B]': # type: ignore
     return Promise(P.of(x))
   
   def then(self, f: Callable[[A], B]) -> 'Promise[B]':
     """Alias for `fmap`"""
     return Promise(P.then(f, self))
   
-  def bind(self, f: Callable[[A], Awaitable[B]]) -> 'Promise[B]':
+  def bind(self, f: Callable[[A], Awaitable[B]]) -> 'Promise[B]': # type: ignore
     return Promise(P.bind(f, self))
   
   def fmap(self, f: Callable[[A], B]) -> 'Promise[B]':

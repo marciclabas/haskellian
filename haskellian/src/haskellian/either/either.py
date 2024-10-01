@@ -29,6 +29,12 @@ class EitherBase(Monad[R], ABC, Generic[L, R]):
     
     (`IsLeft.value` will contain the wrapped value)"""
 
+  def unwrap(self) -> R:
+    """Unwraps the value or throws an `IsLeft` exception
+    
+    (`IsLeft.value` will contain the wrapped value)"""
+    return self.unsafe()
+
   def expect(self, error_msg) -> R:
     """Unwraps the value or throws `IsLeft(error_msg)` exception"""
     return self.mapl(lambda _: error_msg).unsafe()

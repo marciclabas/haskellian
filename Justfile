@@ -1,4 +1,5 @@
 VENV := justfile_directory() + "/.venv"
+BIN := justfile_directory() + "/.venv/bin"
 PYTHON := justfile_directory() + "/.venv/bin/python"
 PKG :=  "haskellian"
 
@@ -8,7 +9,7 @@ help:
 # Build the package (into `dist/`)
 build:
   cd {{PKG}} && \
-  pyright && \
+  {{BIN}}/pyright && \
   rm -drf dist && \
   {{PYTHON}} -m build && \
   rm -drf build
@@ -22,7 +23,7 @@ publish:
 
 # Increase patch version
 patch:
-  $BUMP {{PKG}}/pyproject.toml
+  $CIT_SCRIPTS/bump.sh {{PKG}}/pyproject.toml
 
 # Build and publish
 republish: patch build publish

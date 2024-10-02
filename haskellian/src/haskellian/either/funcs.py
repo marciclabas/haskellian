@@ -1,17 +1,55 @@
-from typing_extensions import TypeVar, Callable, Iterable
+from typing_extensions import TypeVar, Callable, Iterable, ParamSpec, Generic, overload, \
+  Awaitable, Coroutine, get_args
+from inspect import iscoroutinefunction
+from functools import wraps
 from .either import Either, Left, Right
 
 A = TypeVar('A')
 R = TypeVar('R')
 L = TypeVar('L')
-Err = TypeVar('Err', bound=Exception)
+P = ParamSpec('P')
+Err = TypeVar('Err')
 
-def safe(func: Callable[[], R], Exc: type[Err] = Exception) -> 'Either[Err, R]':
-    try:
-      return Right(func())
-    except Exc as e:
-      return Left(e)
+
+class safe(Generic[Err]):
+
+  @property
+  def exc(self) -> type[Err]:
+    return get_args(self.__orig_class__)[0] # type: ignore (yep, typing internals are messed up)
+
+  @overload
+  def __call__(self, fn: Callable[P, Coroutine[None, None, R]]) -> Callable[P, Coroutine[None, None, Either[Err, R]]]: # type: ignore
+    ...
+  @overload
+  def __call__(self, fn: Callable[P, Awaitable[R]]) -> Callable[P, Awaitable[Either[Err, R]]]: # type: ignore
+    ...
+  @overload
+  def __call__(self, fn: Callable[P, R]) -> Callable[P, Either[Err, R]]:
+    ...
+  
+  def __call__(self, fn): # type: ignore
+    if iscoroutinefunction(fn):
+      @wraps(fn)
+      async def _wrapper(*args: P.args, **kwargs: P.kwargs):
+        try:
+          return Right(await fn(*args, **kwargs))
+        except Exception as e:
+          if isinstance(e, self.exc):
+            return Left(e)
+          raise e
+      return _wrapper
+    else:
+      @wraps(fn)
+      def wrapper(*args: P.args, **kwargs: P.kwargs):
+        try:
+          return Right(fn(*args, **kwargs))
+        except Exception as e:
+          if isinstance(e, self.exc):
+            return Left(e)
+          raise e
+      return wrapper
     
+
 def maybe(x: R | None) -> 'Either[None, R]':
   return Left(None) if x is None else Right(x)
 

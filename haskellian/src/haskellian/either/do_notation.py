@@ -20,6 +20,9 @@ class do(Generic[L]):
   ```
   """
   @overload
+  def __call__(self, fn: Callable[P, Coroutine[None, None, R]]) -> Callable[P, Coroutine[None, None, Either[L, R]]]: # type: ignore
+    ...
+  @overload
   def __call__(self, fn: Callable[P, Awaitable[R]]) -> Callable[P, Awaitable[Either[L, R]]]: # type: ignore
     ...
   @overload

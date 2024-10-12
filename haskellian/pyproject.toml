@@ -4,19 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "haskellian"
-version = "0.5.10"
+version = "0.5.12"
 authors = [
   {name="Marcel Claramunt", email="marcel@moveread.com"}
 ]
 description = "The functional programming library you need"
 dependencies = [
-  "lazy-loader", "typing-extensions", "ramda"
+  "lazy-loader", "ramda"
 ]
 requires-python = ">=3.10"
 readme = {file="README.md", content-type="text/markdown"}
 
 [project.urls]
 repo = "https://github.com/moveread/haskellian.git"
-
-[project.optional-dependencies]
-pydantic = ["pydantic"]

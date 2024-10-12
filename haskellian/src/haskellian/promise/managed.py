@@ -6,6 +6,7 @@ A = TypeVar('A', covariant=True)
 B = TypeVar('B')
 
 class ManagedPromise(P.Promise[A], Generic[A]):
+  """Managed awaitable"""
   
   value: A
 

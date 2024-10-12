@@ -1,0 +1,28 @@
+site_name: Haskellian
+repo_name: haskellian
+repo_url: https://github.com/marciclabas/haskellian
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Iter: iter.md
+  - Either: either.md
+  - AsyncIter: asyn-iter.md
+  - Dict: dicts.md
+  - Promise: promise.md
+  - Reference:
+    - Iter: reference/iter.md
+    - Either: reference/either.md
+    - AsyncIter: reference/asyn-iter.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+
+plugins: 
+  - mkdocstrings

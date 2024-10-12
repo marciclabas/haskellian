@@ -12,6 +12,17 @@ Err = TypeVar('Err')
 
 
 class safe(Generic[Err]):
+  """A decorator to catch exceptions and return them as `Left`.
+  
+  ```python
+  @E.safe[OSError]()
+  def safe_write(path: str, content: bytes):
+    with open(path, 'wb') as f:
+      f.write(content)
+
+  result = safe_write('file.txt', b'content') # Either[OSError, None]
+  ```
+  """
 
   @property
   def exc(self) -> type[Err]:
@@ -51,6 +62,7 @@ class safe(Generic[Err]):
     
 
 def maybe(x: R | None) -> 'Either[None, R]':
+  """Converts a nullable value to `Either`"""
   return Left(None) if x is None else Right(x)
 
 def get_or(default: A) -> Callable[[Either[L, R]], R | A]:
@@ -60,7 +72,13 @@ def unsafe(x: Either[L, R]) -> R:
   return x.unsafe()
     
 def sequence(eithers: Iterable[Either[L, R]]) -> Either[list[L], list[R]]:
-  """List of lefts if any (thus with length in `[1, len(eithers)]`), otherwise list of all rights (with length `len(eithers)`)"""
+  """List of lefts if any, otherwise list of all rights.
+  
+  ```python
+  E.sequence([Left(1), Right(2), Right(3), Left(4)]) # Left([1, 4])
+  E.sequence([Right(2), Right(3)]) # Right([2, 3])
+  ```
+  """
   lefts: list[L] = []
   rights: list[R] = []
   for x in eithers:
@@ -68,18 +86,21 @@ def sequence(eithers: Iterable[Either[L, R]]) -> Either[list[L], list[R]]:
   return Right(rights) if lefts == [] else Left(lefts)
 
 def filter(eithers: Iterable[Either[L, R]]) -> Iterable[R]:
+  """"""
   for e in eithers:
     match e:
       case Right(value):
         yield value
 
 def filter_lefts(eithers: Iterable[Either[L, R]]) -> Iterable[L]:
+  """"""
   for e in eithers:
     match e:
       case Left(err):
         yield err
 
 def take_while(eithers: Iterable[Either[L, R]]) -> Iterable[R]:
+  """"""
   for e in eithers:
     match e:
       case Right(x):

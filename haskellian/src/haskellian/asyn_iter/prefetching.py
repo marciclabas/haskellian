@@ -6,20 +6,23 @@ A = TypeVar('A')
 
 @AI.lift
 def prefetched(prefetch: int, xs: AsyncIterable[A]) -> AsyncIterable[A]:
-    buffer = asyncio.Queue(maxsize=max(prefetch, 1))
-    sentinel = object()
+  """Prefetch `prefetch` elements from `xs`
+  - If `prefetched < 1`, it'll be clipped to `1`
+  """
+  buffer = asyncio.Queue(maxsize=max(prefetch, 1))
+  sentinel = object()
 
-    async def producer():
-      async for x in xs:
-        await buffer.put(x)
-      await buffer.put(sentinel)
+  async def producer():
+    async for x in xs:
+      await buffer.put(x)
+    await buffer.put(sentinel)
 
-    async def consumer():
-      while True:
-        item = await buffer.get()
-        if item is sentinel:
-          break
-        yield item
+  async def consumer():
+    while True:
+      item = await buffer.get()
+      if item is sentinel:
+        break
+      yield item
 
-    asyncio.create_task(producer())
-    return consumer()
+  asyncio.create_task(producer())
+  return consumer()

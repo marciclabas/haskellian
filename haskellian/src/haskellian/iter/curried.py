@@ -15,10 +15,10 @@ def filter(p): # type: ignore
   return lambda xs: builtins.filter(p, xs)
 
 def sorted(key: Callable[[A], B] | None = None, reverse: bool = False) -> Callable[[Iterable[A]], Iterable[A]]:
-    return lambda xs: builtins.sorted(xs, key=key, reverse=reverse) # type: ignore
+  return lambda xs: builtins.sorted(xs, key=key, reverse=reverse) # type: ignore
 
 def max(key: Callable[[A], B] | None = None) -> Callable[[Iterable[A]], A]:
-    return lambda xs: builtins.max(xs, key=key, default=None) # type: ignore
+  return lambda xs: builtins.max(xs, key=key, default=None) # type: ignore
 
 def min(key: Callable[[A], B] | None = None) -> Callable[[Iterable[A]], A]:
-    return lambda xs: builtins.min(xs, key=key, default=None) # type: ignore
+  return lambda xs: builtins.min(xs, key=key, default=None) # type: ignore

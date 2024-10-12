@@ -5,6 +5,7 @@ A = TypeVar('A')
 B = TypeVar('B')
 
 class ManagedAsync(AI.AsyncIter[A], Generic[A]):
+  """Managed async iterator"""
 
   def __init__(self):
     self.xs: list[A] = []

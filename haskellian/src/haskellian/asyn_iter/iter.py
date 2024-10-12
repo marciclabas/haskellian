@@ -60,6 +60,9 @@ class AsyncIter(Monad[A], Generic[A], AsyncIterator[A]):
   def skip(self, n: int) -> 'AsyncIter[A]':
     return AI.skip(n, self)
   
+  def every(self, n: int) -> 'AsyncIter[A]':
+    return AI.every(n, self)
+  
   def batch(self, n: int) -> 'AsyncIter[tuple[A, ...]]':
     return AI.batch(n, self)
   
